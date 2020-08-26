@@ -1,4 +1,4 @@
-# cs-4346-Project1-best-group
+# CS4346-Project1
 
 Goals
   - Finish the project
