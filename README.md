@@ -3,10 +3,10 @@
 ## Decision tree
 
 ## Knowledge Base
-  ### Rules
-  ### Clauses
-  ### Variable List
-  ### Conclusion List
+  * Rules
+  * Clauses
+  * Variable List
+  * Conclusion List
 
 ## Interface
 
