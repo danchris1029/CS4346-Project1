@@ -1,6 +1,5 @@
 # CS4346-Project1
-# Map of Project
-
+Project map
 ## Decision tree
 
 ## Knowledge Base
