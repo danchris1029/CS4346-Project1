@@ -2,7 +2,11 @@
 
 ## Decision tree
 
-## Rules
+## Knowledge Base
+  ### Rules
+  ### Clauses
+  ### Variable List
+  ### Conclusion List
 
 ## Interface
 
