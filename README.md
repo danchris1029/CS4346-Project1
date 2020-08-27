@@ -1,12 +1,12 @@
 # CS4346-Project1
 
-##Decision tree
+## Decision tree
 
-##Rules
+## Rules
 
-##Interface
+## Interface
 
-##Inference engine
+## Inference engine
 
 Goals
   - Finish the project
