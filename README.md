@@ -1,4 +1,4 @@
-# CS4346-Project1 - DUE: September 21, 2020
+# CS4346-Project1 - DUE: September, 21, 2020
 Project map
 ## Decision tree
 
