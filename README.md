@@ -8,7 +8,7 @@ Project map
    - Forward Chaining
 
 ## Decision tree
-
+   ![alt text](http://images/sample_decisiontree.png)
 ## Knowledge Base
   * Rules
   * Clauses
