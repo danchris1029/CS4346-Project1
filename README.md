@@ -3,6 +3,8 @@ Project map
 ## Domain
 
 ## Methodologies
+   - Backward Chaining
+   - Forward Chaining
 
 ## Decision tree
 
