@@ -18,7 +18,9 @@ Project map
 ## Program Implementation
 
 ## Source code
-   All of cpp files
+  * forward_chaining.cpp
+  * backward_chaining.cpp
+  * mainapp.cpp
    
 ## Analysis of the program
 
