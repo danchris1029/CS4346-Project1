@@ -2,8 +2,7 @@
 Project map
 ## Domain
    Cyber attacks are a common problem that threatens modern-day security.
-   The current project focuses on solving this problem by implementing artificial intelligence that utilizes forward and backward chaining to predict potential and ongoing       
-   attacks.
+   The current project focuses on solving this problem by implementing artificial intelligence that utilizes forward and backward chaining to predict potential and ongoing    attacks.
 ## Methodologies
    - Backward Chaining
    - Forward Chaining
