@@ -1,4 +1,4 @@
-// Updated 10/4/2020 12:17 AM. CDG
+﻿// Updated 10/4/2020 5:32 PM. 
 /*
 	// NOTE:
 	Have these files in the same folder as this cpp file:
@@ -31,13 +31,12 @@ typedef unordered_map<string, string> stringMap;
 //stringMap backward_chaining();
 void forward_chaining();
 void backward_chaining();
-const int numRules = 15; /* number of rules */
-const int charLength = 20;
+
 
 string var;
 string access, downloaded, virus, breach, unexplained, sys, network,
-explanation, logIn, device, normal, backdoor, trojan, credit, charges,
-unusually, inability, malicious, basic, idAttack, idLeak, slow, ddos,
+explanation, logIn, device, normal, backdoor1, backdoor2, trojan, credit, charges,
+unusually, inability1, inability2, inability3, malicious, basic, idAttack, idLeak, slow, ddos,
 solution, valuable, dropping, restarted;
 
 
@@ -46,21 +45,17 @@ int main(int argc, char** argv) {
 
 	cout << "Performing backward chaining to identify the type of attack.\n";
 
-	// backVarList = backward_chaining();
-
-	//backward_chaining();
+	backward_chaining();
 
 	cout << "Performing forward chaining to recommend possible preventions.\n";
-
-	//forward_chaining(backVarList);
 
 	forward_chaining();
 
 	return 0;
 }
 
-const int forward_clvarlt_size = 91;
-const int forward_varl_size = 11;
+const int forward_clvarlt_size = 96;
+const int forward_varl_size = 13;
 
 
 // removed some global variables
@@ -118,10 +113,30 @@ void forward_chaining()
 	bp = 1;
 
 
-	cout << "HIT RETURN TO CONTINUE" << endl;
-		getchar();
+	//cout << "HIT RETURN TO CONTINUE" << endl;
+	//getchar();
 
-	// clause variables are inserted into clvarlt from the file "forward_clvarlt.txt"			
+	// clause variables are inserted into clvarlt from the file "forward_clvarlt.txt"		
+
+
+
+	fstream variablelistFile;
+	variablelistFile.open("forward_variablelist.txt", fstream::in);
+	string variable;
+
+	for (int i = 1; i <= forward_varl_size; i++) {
+		getline(variablelistFile, variable);
+		varlt[i] = variable.c_str();
+	}
+
+	cout << "*** VARIABLE LIST ***\n";
+	for (j = 1; j <= forward_varl_size; j++)
+		cout << "VARIABLE " << j << " " << varlt[j] << endl;
+
+	variablelistFile.close();
+	cout << "Press any key to continue\n";
+	cin.get();
+
 	fstream clvarltFile;
 	clvarltFile.open("forward_clvarlt.txt", fstream::in);
 	string clauseVar;
@@ -144,20 +159,32 @@ void forward_chaining()
 	}*/
 
 	cout << "*** CLAUSE-VARIABLE LIST ***\n";
-	for (i = 1; i < 24; i++)
+	for (i = 1; i <= 24; i++)
 	{
 		cout << "** CLAUSE " << i << endl;
-		for (j = 1; j < 5; j++)
+		for (j = 1; j <= 4; j++)
 		{
 			k = forward_clause_size * (i - 1) + j;
-			cout << "VARIABLE " <<  j << " " << clvarlt[k] << endl;
+			cout << "VARIABLE " << j << " " << clvarlt[k] << endl;
 		}
 		// removed waiting at i = 4
 	}
 
 	/****** INFERENCE SECTION *****************/
-	cout << "ENTER CONDITION VARIABLE? " << endl;
-	cin >> c;
+	while (true) {
+		int leave = 0;
+		cout << "ENTER CONDITION VARIABLE? " << endl;
+		cin >> c;
+		for (int k = 1; k <= 11; k++) {
+			if (varlt[k] == c) {
+				leave = 1;
+				break;
+			}
+		}
+		if (leave)
+			break;
+		cout << "\nNOT A CONDITION VARIABLE " << endl;
+	}
 	/* place condition variable c on condition var queue cndvar */
 	cndvar[bp] = c;
 	/* move backpointer (bp) to back */
@@ -172,9 +199,9 @@ void forward_chaining()
 	f = 1;
 	do { // b496
 		jump = false;
+		cn = 1;
 		search(&flag, &sn, &f, &fp, clvarlt, cndvar, &cn, &k);
 		/* point to first clause in statement */
-		cn = 1;
 		if (sn != 0) {
 			/* more statements */
 			/* locate the clause */
@@ -182,7 +209,7 @@ void forward_chaining()
 			/* clause variable */
 			v = clvarlt[i];
 			/* are there any more clauses for this statement */
-			while (v == "")
+			while (v != "")
 				/* more clauses */
 			{
 				/* check instantiation of this clause */
@@ -196,14 +223,14 @@ void forward_chaining()
 			/* no more clauses - check IF part of statement */
 			s = 0;
 			/* sample IF-THEN statements from the position knowledge base */
-			char N[] = "NO";
-			char Y[] = "YES";
+			string N = "NO";
+			string Y = "YES";
 
 			switch (sn)
 			{
 				/* statement 1 */
 			case 1:
-				if (backdoor == N) s = 1;
+				if (backdoor1 == N) s = 1;
 				break;
 				/* statement 2 */
 			case 2:
@@ -217,14 +244,14 @@ void forward_chaining()
 			case 4: if (slow == N) s = 1;
 				break;
 				/* statement 5 */
-			case 5: if (inability == N) s = 1;
+			case 5: if (inability1 == N) s = 1;
 				break;
 				/* statement 6 */
-			case 6: if (restarted == Y && inability == N) s = 1;
+			case 6: if (restarted == Y && inability1 == N) s = 1;
 				break;
-			case 7: if (restarted == N && inability == N) s = 1;
+			case 7: if (restarted == N && inability1 == N) s = 1;
 				break;
-			case 8: if (inability == Y && inability == N) s = 1;
+			case 8: if (inability1 == Y && inability1 == N) s = 1;
 				break;
 			case 9: if (restarted == N && slow == N) s = 1;
 				break;
@@ -242,7 +269,7 @@ void forward_chaining()
 				break;
 			case 16: if (charges == N && dropping == N) s = 1;
 				break;
-			case 17: if (trojan == Y && backdoor == N) s = 1;
+			case 17: if (trojan == Y && backdoor1 == N) s = 1;
 				break;
 			case 18: if (trojan == Y && normal == Y) s = 1;
 				break;
@@ -250,13 +277,13 @@ void forward_chaining()
 				break;
 			case 20: if (trojan == Y && normal == N && device == Y) s = 1;
 				break;
-			case 21: if (trojan == Y && backdoor == Y && backdoor == Y) s = 1;
+			case 21: if (trojan == Y && backdoor1 == Y && backdoor2 == Y) s = 1;
 				break;
-			case 22: if (trojan == Y && backdoor == Y && backdoor == N) s = 1;
+			case 22: if (trojan == Y && backdoor1 == Y && backdoor2 == N) s = 1;
 				break;
-			case 23: if (inability == Y && inability == Y && inability == Y) s = 1;
+			case 23: if (inability1 == Y && inability2 == Y && inability3 == Y) s = 1;
 				break;
-			case 24: if (inability == Y && inability == Y && inability == N) s = 1;
+			case 24: if (inability1 == Y && inability2 == Y && inability3 == N) s = 1;
 				break;
 
 			}
@@ -404,7 +431,7 @@ void forward_chaining()
 					solution = "YES";
 					cout << "SOLUTION = YES\n";
 					v = "SOLUTION";
-						instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
 					break;
 				case 22:
 					solution = "YES";
@@ -424,8 +451,6 @@ void forward_chaining()
 					v = "SOLUTION";
 					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
 					break;
-
-
 				}
 
 			}
@@ -439,7 +464,7 @@ void forward_chaining()
 		the next variable (cndvar(fp+1)). If no more variables are
 		at the front of the queue, stop. */
 		/* next queue variable */
-		if (jump == false) {
+		if (jump == false && sn != 0) {
 			fp = fp + 1;
 			if (fp < bp)
 			{
@@ -451,6 +476,8 @@ void forward_chaining()
 		}
 
 	} while (jump == true);
+	//if (v == "")
+	//	cout << "\nNO SOLUTIONS FOUND" << endl;
 	cout << "\nEnd of forward chaining part\n";
 }
 
@@ -467,7 +494,7 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 	i = 1;
 
 	/* find variable in the variable list */
-	while (v != varlt[i] && (i <= 11)) i = i + 1;
+	while (v != varlt[i] && (i <= forward_varl_size)) i = i + 1;
 
 	/* check if already instantiated */
 	if (instlt[i] != 1)
@@ -482,46 +509,53 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 		{
 			/* input statements for sample position knowledge base */
 		case 1:
-			cout << "YES OR NO FOR BACKDOOR? ";
-			cin >> backdoor;
+			cout << "YES OR NO FOR FIRST BACKDOOR? ";
+			cin >> backdoor1;
 			break;
 		case 2:
+			cout << "YES OR NO FOR DEVICE? ";
+			cin >> device;
+			break;
+		case 3:
+			cout << "YES OR NO FOR DROPPING? ";
+			cin >> dropping;
+			break;
+		case 4:
+			cout << "YES OR NO FOR SLOW? ";
+			cin >> slow;
+			break;
+		case 5:
+			cout << "YES OR NO FOR FIRST INABILITY? ";
+			cin >> inability1;
+			break;
+		case 6:
+			cout << "YES OR NO FOR RESTARTED? ";
+			cin >> restarted;
+			break;
+		case 7:
+			cout << "YES OR NO FOR CHARGES? ";
+			cin >> charges;
+			break;
+		case 8:
 			cout << "YES OR NO FOR TROJAN? ";
 			cin >> trojan;
 			break;
-		case 3:
-			cout << "YES OR NO FOR NORMAL? ";
-			cin >> trojan;
-			break;
-		case 4:
-			cout << "YES OR NO FOR DEVICE? ";
-			cin >> trojan;
-			break;
-		case 5:
-			cout << "YES OR NO FOR CHARGES? ";
-			cin >> trojan;
-			break;
-		case 6:
-			cout << "YES OR NO FOR DROPPING? ";
-			cin >> trojan;
-			break;
-		case 7:
-			cout << "YES OR NO FOR SLOW? ";
-			cin >> trojan;
-			break;
-		case 8:
-			cout << "YES OR NO FOR RESTARTED? ";
-			cin >> trojan;
-			break;
 		case 9:
-			cout << "YES OR NO FOR INABILITY? ";
-				cin >> trojan;
+			cout << "YES OR NO FOR NORMAL? ";
+			cin >> normal;
 			break;
-		case 10:
-			cout << "YES OR NO FOR SOLUTION? ";
-			cin >> trojan;
+		case 11:
+			cout << "YES OR NO FOR SECOND BACKDOOR? ";
+			cin >> backdoor2;
 			break;
-
+		case 12:
+			cout << "YES OR NO FOR SECOND INABILITY? ";
+			cin >> inability2;
+			break;
+		case 13:
+			cout << "YES OR NO FOR THIRD INABILITY? ";
+			cin >> inability3;
+			break;
 		}
 	}
 	/* end of input statements for the position knowledge base */
@@ -539,11 +573,11 @@ void search(int* flag, int* sn, int* f, int* fp, string clvarlt[forward_clvarlt_
 	*flag = 0;
 	*sn = *f;
 
-	while ((*flag == 0) && (*sn <= 11))
+	while ((*flag == 0) && (*sn <= 24))
 	{
 		*cn = 1;
 		*k = (*sn - 1) * 4 + *cn;
-		while (clvarlt[*k] != cndvar[*fp] && (*cn < 4))	// if variable in Conclusion variable queue is not equal to Clause variable
+		while (clvarlt[*k] != cndvar[*fp] && (*cn <= 4))	// if variable in Conclusion variable queue is not equal to Clause variable
 		{
 			*cn = *cn + 1;
 			*k = (*sn - 1) * 4 + *cn;
@@ -563,14 +597,14 @@ void instantiate_forward(int* index, string v, string varlt[forward_varl_size + 
 	int i = *index;
 	i = 1;
 	/* find varialbe in the varialbe list (varlt) */
-	while ((v != varlt[i]) && (i <= 11)) i = i + 1;
+	while ((v != varlt[i]) && (i <= forward_varl_size)) i = i + 1;
 
 	/* instantiate it */
 	instlt[i] = 1;
 	i = 1;
 
 	/* determine if (v) is or already has been on the queue (cndvar) */
-	while ((v != cndvar[i]) && (i <= 11)) i = i + 1;
+	while ((v != cndvar[i]) && (i <= forward_varl_size)) i = i + 1;
 	/* variable has not been on the queue. Store it in the back of the queue */
 	if (v != cndvar[i])
 	{
@@ -663,9 +697,9 @@ void backward_chaining()
 
 
 	cout << "*** CONCLUSION LIST ***\n";
-	for (i = 1; i <= 24; i++) cout << "CONCLUSION " <<  i << " " << conclt[i] << endl;
+	for (i = 1; i <= 24; i++) cout << "CONCLUSION " << i << " " << conclt[i] << endl;
 
-		cout << "HIT RETURN TO CONTINUE" << endl;
+	cout << "HIT RETURN TO CONTINUE" << endl;
 	cin.get();
 	cout << "*** VARIABLE LIST *\n";
 	/**** comment 367 *****/
@@ -680,8 +714,8 @@ void backward_chaining()
 	variableListF.close();
 
 
-	for (i = 1; i <= back_varlt_size; i++) cout << "VARIABLE " <<  i << " " << varlt[i] << endl;
-		cout << "HIT RETURN KEY TO CONTINUE" << endl;
+	for (i = 1; i <= back_varlt_size; i++) cout << "VARIABLE " << i << " " << varlt[i] << endl;
+	cout << "HIT RETURN KEY TO CONTINUE" << endl;
 	cin.get();
 	cout << "*** CLAUSE VARIABLE LIST ***\n";
 	/***** comment 407 through 409 ***/
@@ -733,12 +767,12 @@ void backward_chaining()
 	clvarltFile.close();
 
 	for (i = 1; i <= back_conclt_size; i++) {
-		cout << "** CLAUSE " <<  i << endl;
-			for (j = 1; j < back_clause_size + 1; j++)
-			{
-				k = back_clause_size * (i - 1) + j;
-				cout << "VARIABLE " << j << " " << clvarlt[k] << endl;
-			}
+		cout << "** CLAUSE " << i << endl;
+		for (j = 1; j < back_clause_size + 1; j++)
+		{
+			k = back_clause_size * (i - 1) + j;
+			cout << "VARIABLE " << j << " " << clvarlt[k] << endl;
+		}
 		// removed waiting at i = 4
 	}
 	/****** inference section *****/
@@ -800,11 +834,11 @@ void backward_chaining()
 				// Use the knowledge base on the google docs
 					/* statement 1 */
 				case 1: if (sys.compare(Y) == 0 && virus.compare(Y) == 0 && downloaded.compare(Y) == 0
-					&& backdoor.compare(Y) == 0 && trojan.compare(N) == 0) s = 1;
+					&& backdoor1.compare(Y) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 2 */
 				case 2: if (sys.compare(Y) == 0 && virus.compare(Y) == 0 && downloaded.compare(Y) == 0
-					&& backdoor.compare(N) == 0 && device.compare(N) == 0 && normal.compare(N) == 0 && trojan.compare(N) == 0) s = 1;
+					&& backdoor1.compare(N) == 0 && device.compare(N) == 0 && normal.compare(N) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 3 */
 				case 3: if (sys.compare(Y) == 0 && virus.compare(Y) == 0 && downloaded.compare(N) == 0
@@ -812,11 +846,11 @@ void backward_chaining()
 					break;
 					/* statement 4 */
 				case 4: if (sys.compare(Y) == 0 && virus.compare(N) == 0 && access.compare(Y) == 0
-					&& downloaded.compare(Y) == 0 && backdoor.compare(Y) == 0 && trojan.compare(N) == 0) s = 1;
+					&& downloaded.compare(Y) == 0 && backdoor1.compare(Y) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 5 */
 				case 5: if (sys.compare(Y) == 0 && virus.compare(N) == 0 && access.compare(Y) == 0
-					&& downloaded.compare(Y) == 0 && backdoor.compare(N) == 0 && device.compare(N) == 0 && normal.compare(N) == 0
+					&& downloaded.compare(Y) == 0 && backdoor1.compare(N) == 0 && device.compare(N) == 0 && normal.compare(N) == 0
 					&& trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 6 */
@@ -849,7 +883,7 @@ void backward_chaining()
 					break;
 					/* statement 12 */
 				case 12: if (sys.compare(N) == 0 && breach.compare(Y) == 0 && logIn.compare(Y) == 0
-					&& access.compare(Y) == 0 && downloaded.compare(Y) == 0 && backdoor.compare(Y) == 0
+					&& access.compare(Y) == 0 && downloaded.compare(Y) == 0 && backdoor1.compare(Y) == 0
 					&& trojan.compare(N) == 0 && normal.compare(N) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 13 */
@@ -859,7 +893,7 @@ void backward_chaining()
 					break;
 					/* statement 14 */
 				case 14: if (sys.compare(N) == 0 && breach.compare(N) == 0 && logIn.compare(Y) == 0
-					&& access.compare(Y) == 0 && downloaded.compare(Y) == 0 && backdoor.compare(N) == 0
+					&& access.compare(Y) == 0 && downloaded.compare(Y) == 0 && backdoor1.compare(N) == 0
 					&& device.compare(N) == 0 && normal.compare(N) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 15 */
@@ -887,11 +921,11 @@ void backward_chaining()
 					break;
 				case 21: if (network.compare(Y) == 0 && explanation.compare(Y) == 0) s = 1;
 					break;
-				case 22: if (network.compare(Y) == 0 && explanation.compare(N) == 0 && inability.compare(Y) == 0) s = 1;
+				case 22: if (network.compare(Y) == 0 && explanation.compare(N) == 0 && inability1.compare(Y) == 0) s = 1;
 					break;
-				case 23: if (network.compare(Y) == 0 && explanation.compare(N) == 0 && inability.compare(N) == 0 && unusually.compare(Y) == 0) s = 1;
+				case 23: if (network.compare(Y) == 0 && explanation.compare(N) == 0 && inability1.compare(N) == 0 && unusually.compare(Y) == 0) s = 1;
 					break;
-				case 24: if (inability.compare(N) == 0 && unusually.compare(N) == 0) s = 1;
+				case 24: if (inability1.compare(N) == 0 && unusually.compare(N) == 0) s = 1;
 					break;
 
 
@@ -1034,7 +1068,7 @@ void backward_chaining()
 			}
 			if (sn == 0) {
 				cout << "\n*** NOT SUCCESSFUL\n";
-					break;
+				break;
 
 			}
 
@@ -1161,8 +1195,8 @@ variable list (varlt) contains the variable (varble). */
 		case 12: cout << "INPUT YES OR NO FOR NORMAL? ";
 			cin >> normal;
 			break;
-		case 13: cout << "INPUT YES OR NO FOR BACKDOOR? ";
-			cin >> backdoor;
+		case 13: cout << "INPUT YES OR NO FOR backdoor1? ";
+			cin >> backdoor1;
 			break;
 		case 14: cout << "INPUT YES OR NO FOR TROJAN? ";
 			cin >> trojan;
@@ -1177,7 +1211,7 @@ variable list (varlt) contains the variable (varble). */
 			cin >> unusually;
 			break;
 		case 18: cout << "INPUT YES OR NO FOR INABILITY? ";
-			cin >> inability;
+			cin >> inability1;
 			break;
 
 
@@ -1187,5 +1221,4 @@ variable list (varlt) contains the variable (varble). */
 	}
 	*index = i;
 }
-
 
