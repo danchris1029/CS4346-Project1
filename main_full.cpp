@@ -1,4 +1,4 @@
-﻿// Updated 10/4/2020 5:32 PM. 
+﻿// Updated 10/4/2020 6:52 PM.
 /*
 	// NOTE:
 	Have these files in the same folder as this cpp file:
@@ -31,8 +31,8 @@ typedef unordered_map<string, string> stringMap;
 
 //void forward_chaining(stringMap& backVarList);
 //stringMap backward_chaining();
-void forward_chaining();
-void backward_chaining();
+void Prevention_FW();
+void Attacks_BW();
 
 
 string var;
@@ -47,11 +47,11 @@ int main(int argc, char** argv) {
 
 	cout << "Performing backward chaining to identify the type of attack.\n";
 
-	backward_chaining();
+	Attacks_BW();
 
 	cout << "Performing forward chaining to recommend possible preventions.\n";
 
-	forward_chaining();
+	Prevention_FW();
 
 	return 0;
 }
@@ -67,7 +67,7 @@ void instantiate_forward(int* index, string v, string varlt[forward_varl_size + 
 
 
 
-void forward_chaining()
+void Prevention_FW()
 {
 
 	// Implementation: Produce the following; Knowledge base, clause variable list, variable list, conclusion variable queue and clause variable pointer.
@@ -645,7 +645,7 @@ void push_on_stack(int* sp, int* sn, int statsk[], int clausk[]);
 void instantiate_backward(int* index, string varble, string varlt[], int instlt[]);
 
 
-void backward_chaining()
+void Attacks_BW()
 {
 	bool b520 = true;
 	bool b545 = true;
@@ -1223,4 +1223,3 @@ variable list (varlt) contains the variable (varble). */
 	}
 	*index = i;
 }
-
