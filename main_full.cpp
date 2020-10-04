@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
 
 	// backVarList = backward_chaining();
 
-	backward_chaining();
+	//backward_chaining();
 
 	cout << "Performing forward chaining to recommend possible preventions.\n";
 
@@ -133,7 +133,7 @@ void forward_chaining()
 
 	clvarltFile.close();
 
-	for (i = 1; i <= 24; i++) {
+	/*for (i = 1; i <= 24; i++) {
 		cout << "** CLAUSE " << i << endl;
 			for (j = 1; j < forward_clause_size + 1; j++)
 			{
@@ -141,7 +141,7 @@ void forward_chaining()
 				cout << "VARIABLE " << j <<  " " <<  clvarlt[k] << endl;
 			}
 		// removed waiting at i = 4
-	}
+	}*/
 
 	cout << "*** CLAUSE-VARIABLE LIST ***\n";
 	for (i = 1; i < 24; i++)
@@ -220,43 +220,43 @@ void forward_chaining()
 			case 5: if (inability == N) s = 1;
 				break;
 				/* statement 6 */
-			case 6: if (restarted == Y) s = 1;
+			case 6: if (restarted == Y && inability == N) s = 1;
 				break;
-			case 7: if (restarted == N) s = 1;
+			case 7: if (restarted == N && inability == N) s = 1;
 				break;
-			case 8: if (inability == Y) s = 1;
+			case 8: if (inability == Y && inability == N) s = 1;
 				break;
-			case 9: if (restarted == Y) s = 1;
+			case 9: if (restarted == N && slow == N) s = 1;
 				break;
-			case 10: if (restarted == Y) s = 1;
+			case 10: if (restarted == Y && slow == N) s = 1;
 				break;
-			case 11: if (inability == N) s = 1;
+			case 11: if (restarted == Y && slow == Y) s = 1;
 				break;
-			case 12: if (restarted == Y) s = 1;
+			case 12: if (slow == Y && slow == N) s = 1;
 				break;
-			case 13: if (restarted == Y) s = 1;
+			case 13: if (slow == Y && slow == Y) s = 1;
 				break;
-			case 14: if (restarted == Y) s = 1;
+			case 14: if (charges == Y && dropping == Y) s = 1;
 				break;
-			case 15: if (restarted == Y) s = 1;
+			case 15: if (charges == N && dropping == Y) s = 1;
 				break;
-			case 16: if (restarted == Y) s = 1;
+			case 16: if (charges == N && dropping == N) s = 1;
 				break;
-			case 17: if (inability == N) s = 1;
+			case 17: if (trojan == Y && backdoor == N) s = 1;
 				break;
-			case 18: if (restarted == Y) s = 1;
+			case 18: if (trojan == Y && normal == Y) s = 1;
 				break;
-			case 19: if (restarted == Y) s = 1;
+			case 19: if (trojan == Y && normal == N && device == N) s = 1;
 				break;
-			case 20: if (restarted == Y) s = 1;
+			case 20: if (trojan == Y && normal == N && device == Y) s = 1;
 				break;
-			case 21: if (restarted == Y) s = 1;
+			case 21: if (trojan == Y && backdoor == Y && backdoor == Y) s = 1;
 				break;
-			case 22: if (restarted == Y) s = 1;
+			case 22: if (trojan == Y && backdoor == Y && backdoor == N) s = 1;
 				break;
-			case 23: if (restarted == Y) s = 1;
+			case 23: if (inability == Y && inability == Y && inability == Y) s = 1;
 				break;
-			case 24: if (restarted == Y) s = 1;
+			case 24: if (inability == Y && inability == Y && inability == N) s = 1;
 				break;
 
 			}
@@ -574,7 +574,7 @@ void instantiate_forward(int* index, string v, string varlt[forward_varl_size + 
 	/* variable has not been on the queue. Store it in the back of the queue */
 	if (v != cndvar[i])
 	{
-		cndvar[*bp] == v;
+		cndvar[*bp] = v;
 		*bp = *bp + 1;
 	}
 
@@ -650,9 +650,9 @@ void backward_chaining()
 
 
 	for (i = 1; i <= 240; i++)  clvarlt[i] = "";
-	std::fstream conclusionListF;
-	conclusionListF.open("backward_conclusionlist.txt", std::fstream::in);
-	std::string c;
+	fstream conclusionListF;
+	conclusionListF.open("backward_conclusionlist.txt", fstream::in);
+	string c;
 
 	for (int i = 1; i <= 24; i++) {
 		getline(conclusionListF, c);
@@ -670,7 +670,7 @@ void backward_chaining()
 	cout << "*** VARIABLE LIST *\n";
 	/**** comment 367 *****/
 	fstream variableListF;
-	variableListF.open("backward_variablelist.txt", std::fstream::in);
+	variableListF.open("backward_variablelist.txt", fstream::in);
 
 	for (int i = 1; i <= back_varlt_size; i++) {
 		getline(variableListF, c);
