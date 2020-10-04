@@ -1,6 +1,6 @@
 // Updated 10/4/2020 12:17 AM. CDG
 /*
-    // NOTE: 
+	// NOTE:
 	Have these files in the same folder as this cpp file:
 			backward_clvarlt.txt
 			backward_conclusionlist.txt
@@ -34,7 +34,7 @@ void backward_chaining();
 const int numRules = 15; /* number of rules */
 const int charLength = 20;
 
- string var;
+string var;
 string access, downloaded, virus, breach, unexplained, sys, network,
 explanation, logIn, device, normal, backdoor, trojan, credit, charges,
 unusually, inability, malicious, basic, idAttack, idLeak, slow, ddos,
@@ -44,19 +44,19 @@ solution, valuable, dropping, restarted;
 
 int main(int argc, char** argv) {
 
-    cout << "Performing backward chaining to identify the type of attack.\n";
+	cout << "Performing backward chaining to identify the type of attack.\n";
 
-    // backVarList = backward_chaining();
+	// backVarList = backward_chaining();
 
-    backward_chaining();
+	backward_chaining();
 
-    cout << "Performing forward chaining to recommend possible preventions.\n";
+	cout << "Performing forward chaining to recommend possible preventions.\n";
 
-     //forward_chaining(backVarList);
+	//forward_chaining(backVarList);
 
-    forward_chaining();
+	forward_chaining();
 
-    return 0;
+	return 0;
 }
 
 const int forward_clvarlt_size = 91;
@@ -73,130 +73,130 @@ void instantiate_forward(int* index, string v, string varlt[forward_varl_size + 
 void forward_chaining()
 {
 
-     // Implementation: Produce the following; Knowledge base, clause variable list, variable list, conclusion variable queue and clause variable pointer.
-    // Follow through using the results from backward_chaining(), meaning a variable must be passed in order to process the rules.
-    // Traverse through the rules.
+	// Implementation: Produce the following; Knowledge base, clause variable list, variable list, conclusion variable queue and clause variable pointer.
+   // Follow through using the results from backward_chaining(), meaning a variable must be passed in order to process the rules.
+   // Traverse through the rules.
 
-    queue <double> conclVarQue;
-    
-    /*
-    BACKDOOR = BKD
-    TROJAN = TRJ
-    NORMAL = NRM
-    DEVICE = DV
-    CHARGES = CHG
-    DROPPING = DRP
-    SLOW = SL
-    RESTARTED = RST
-    INABILITY = INY
-    SOLUTION = SLT
-    */
-    
-    string defaultVal = "UIN"; // uninitialized
+	queue <double> conclVarQue;
 
-    stringMap variableList;
+	/*
+	BACKDOOR = BKD
+	TROJAN = TRJ
+	NORMAL = NRM
+	DEVICE = DV
+	CHARGES = CHG
+	DROPPING = DRP
+	SLOW = SL
+	RESTARTED = RST
+	INABILITY = INY
+	SOLUTION = SLT
+	*/
 
-    variableList = { {"BKD", defaultVal}, {"TRJ", defaultVal}, {"NRM", defaultVal}, {"DV", defaultVal}, \
-    {"CHG", defaultVal}, {"DRP", defaultVal}, {"SL", defaultVal}, {"RST", defaultVal}, {"INY", defaultVal}, \
-    {"SLT", defaultVal}}; // Created as a hash table with uninitialized values as default
+	string defaultVal = "UIN"; // uninitialized
 
+	stringMap variableList;
 
-    bool jump = false;
-
-int instlt[11];
-int flag;
-int f, i, j, k, s, fp   /* front pointer */;
-int  bp  /* back pointer */, gr /* grade */, sn; /* statement number */
-int cn;  /* clause number */
-string cndvar[forward_varl_size +1];
-	string varlt[forward_varl_size +1], /* variable list*/ clvarlt[forward_clvarlt_size+1]; /* clause var list */ // 4 * 15 =  60
-string c, vp, /* condition variable */  v; /*variable */
-
-int forward_clause_size = 4;
-
-fp = 1;
-bp = 1;
+	variableList = { {"BKD", defaultVal}, {"TRJ", defaultVal}, {"NRM", defaultVal}, {"DV", defaultVal}, \
+	{"CHG", defaultVal}, {"DRP", defaultVal}, {"SL", defaultVal}, {"RST", defaultVal}, {"INY", defaultVal}, \
+	{"SLT", defaultVal} }; // Created as a hash table with uninitialized values as default
 
 
-cout << “HIT RETURN TO CONTINUE" << endl;
-getchar();
+	bool jump = false;
 
-// clause variables are inserted into clvarlt from the file "forward_clvarlt.txt"			
-fstream clvarltFile;
-clvarltFile.open("forward_clvarlt.txt", fstream::in);
-string clauseVar;
+	int instlt[11];
+	int flag;
+	int f, i, j, k, s, fp   /* front pointer */;
+	int  bp  /* back pointer */, gr /* grade */, sn; /* statement number */
+	int cn;  /* clause number */
+	string cndvar[forward_varl_size + 1];
+	string varlt[forward_varl_size + 1], /* variable list*/ clvarlt[forward_clvarlt_size + 1]; /* clause var list */ // 4 * 15 =  60
+	string c, vp, /* condition variable */  v; /*variable */
 
-for (int i = 1; i <= forward_clvarlt_size; i++) {
-	getline(clvarltFile, clauseVar);
-	clvarlt[i] = clauseVar.c_str();
-}
+	int forward_clause_size = 4;
 
-clvarltFile.close();
+	fp = 1;
+	bp = 1;
 
-for (i = 1; i <= 24; i++) {
-	cout << "** CLAUSE ” << i << endl;
-	for (j = 1; j < forward_clause_size + 1; j++)
-	{
-		k = forward_clause_size * (i - 1) + j;
-		cout << "VARIABLE ” << j <<  “ “ <<  clvarlt[k] << endl;
+
+	cout << "HIT RETURN TO CONTINUE" << endl;
+		getchar();
+
+	// clause variables are inserted into clvarlt from the file "forward_clvarlt.txt"			
+	fstream clvarltFile;
+	clvarltFile.open("forward_clvarlt.txt", fstream::in);
+	string clauseVar;
+
+	for (int i = 1; i <= forward_clvarlt_size; i++) {
+		getline(clvarltFile, clauseVar);
+		clvarlt[i] = clauseVar.c_str();
 	}
-	// removed waiting at i = 4
-}
 
-cout << "*** CLAUSE-VARIABLE LIST ***\n";
-for (i = 1; i < 24; i++)
-{
-	cout << "** CLAUSE " <<  i << endl;
-	for (j = 1; j < 5; j++)
-	{
-		k = forward_clause_size * (i - 1) + j;
-		cout << "VARIABLE “ <<  j << “ “ << clvarlt[k] << endl;
+	clvarltFile.close();
+
+	for (i = 1; i <= 24; i++) {
+		cout << "** CLAUSE " << i << endl;
+			for (j = 1; j < forward_clause_size + 1; j++)
+			{
+				k = forward_clause_size * (i - 1) + j;
+				cout << "VARIABLE " << j <<  " " <<  clvarlt[k] << endl;
+			}
+		// removed waiting at i = 4
 	}
-	// removed waiting at i = 4
-}
 
-/****** INFERENCE SECTION *****************/
-cout << "ENTER CONDITION VARIABLE? " << endl;
-cin >> c;
-/* place condition variable c on condition var queue cndvar */
-cndvar[bp] = c;
-/* move backpointer (bp) to back */
-bp = bp + 1;
-/* set the condition variable pointer consisting of the
-statement number (sn) and the clause number (cn) */
-sn = 1; cn = 1;
-/* find the next statement number containing the condition variable
-which is in front of the queue (cndvar), this statement number
-is located in the clause variable list (clvarlt) */
-/* start at the beginning */
-f = 1;
-do { // b496
-	jump = false;
-	search(&flag, &sn, &f, &fp, clvarlt, cndvar, &cn, &k);
-	/* point to first clause in statement */
-	cn = 1;
-	if (sn != 0) {
-		/* more statements */
-		/* locate the clause */
-		i = forward_clause_size * (sn - 1) + cn;
-		/* clause variable */
-		v = clvarlt[i];
-		/* are there any more clauses for this statement */
-		while (v == "")
-			/* more clauses */
+	cout << "*** CLAUSE-VARIABLE LIST ***\n";
+	for (i = 1; i < 24; i++)
+	{
+		cout << "** CLAUSE " << i << endl;
+		for (j = 1; j < 5; j++)
 		{
-			/* check instantiation of this clause */
-			check_instantiation(&i, v, varlt, instlt);
-			cn = cn + 1;
-			/* check next clause */
-			i = forward_clause_size * (sn - 1) + cn;
-			v = clvarlt[i];
+			k = forward_clause_size * (i - 1) + j;
+			cout << "VARIABLE " <<  j << " " << clvarlt[k] << endl;
 		}
+		// removed waiting at i = 4
+	}
 
-		/* no more clauses - check IF part of statement */
-		s = 0;
-		/* sample IF-THEN statements from the position knowledge base */
-		char N[] = "NO";
+	/****** INFERENCE SECTION *****************/
+	cout << "ENTER CONDITION VARIABLE? " << endl;
+	cin >> c;
+	/* place condition variable c on condition var queue cndvar */
+	cndvar[bp] = c;
+	/* move backpointer (bp) to back */
+	bp = bp + 1;
+	/* set the condition variable pointer consisting of the
+	statement number (sn) and the clause number (cn) */
+	sn = 1; cn = 1;
+	/* find the next statement number containing the condition variable
+	which is in front of the queue (cndvar), this statement number
+	is located in the clause variable list (clvarlt) */
+	/* start at the beginning */
+	f = 1;
+	do { // b496
+		jump = false;
+		search(&flag, &sn, &f, &fp, clvarlt, cndvar, &cn, &k);
+		/* point to first clause in statement */
+		cn = 1;
+		if (sn != 0) {
+			/* more statements */
+			/* locate the clause */
+			i = forward_clause_size * (sn - 1) + cn;
+			/* clause variable */
+			v = clvarlt[i];
+			/* are there any more clauses for this statement */
+			while (v == "")
+				/* more clauses */
+			{
+				/* check instantiation of this clause */
+				check_instantiation(&i, v, varlt, instlt);
+				cn = cn + 1;
+				/* check next clause */
+				i = forward_clause_size * (sn - 1) + cn;
+				v = clvarlt[i];
+			}
+
+			/* no more clauses - check IF part of statement */
+			s = 0;
+			/* sample IF-THEN statements from the position knowledge base */
+			char N[] = "NO";
 			char Y[] = "YES";
 
 			switch (sn)
@@ -259,19 +259,19 @@ do { // b496
 			case 24: if (restarted == Y) s = 1;
 				break;
 
-		}
+			}
 
 
-		/* see if the THEN part should be inovked, i.e., s=1 */
-		if (s != 1)
-		{
-			f = sn + 1;
-			jump = true;
-		}
+			/* see if the THEN part should be inovked, i.e., s=1 */
+			if (s != 1)
+			{
+				f = sn + 1;
+				jump = true;
+			}
 
-		/* invoke THEN part */
-		if (!jump) {
-			switch (sn)
+			/* invoke THEN part */
+			if (!jump) {
+				switch (sn)
 				{
 					/*********** comment 1500 ***********/
 					/* put variable on the conclusion variable queue */
@@ -403,8 +403,8 @@ do { // b496
 				case 21:
 					solution = "YES";
 					cout << "SOLUTION = YES\n";
-					v = "SOLUTION”;
-					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					v = "SOLUTION";
+						instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
 					break;
 				case 22:
 					solution = "YES";
@@ -426,32 +426,32 @@ do { // b496
 					break;
 
 
+				}
+
 			}
-
-		}
-		f = sn + 1;
-		jump = true;
-	}
-
-	/* no more clauses in the clause variable list (clvarlt)
-	containing the variable in front of the queue (cndvar(fp))
-	then remove front variable (cndvar(fp)) and replace it by
-	the next variable (cndvar(fp+1)). If no more variables are
-	at the front of the queue, stop. */
-	/* next queue variable */
-	if (jump == false) {
-		fp = fp + 1;
-		if (fp < bp)
-		{
-			/* check out the condition variable */
-			f = 1;
+			f = sn + 1;
 			jump = true;
 		}
-		/* no more conclusion variables on queue */
-	}
 
-} while (jump == true);
-cout << "\nEnd of forward chaining part\n";
+		/* no more clauses in the clause variable list (clvarlt)
+		containing the variable in front of the queue (cndvar(fp))
+		then remove front variable (cndvar(fp)) and replace it by
+		the next variable (cndvar(fp+1)). If no more variables are
+		at the front of the queue, stop. */
+		/* next queue variable */
+		if (jump == false) {
+			fp = fp + 1;
+			if (fp < bp)
+			{
+				/* check out the condition variable */
+				f = 1;
+				jump = true;
+			}
+			/* no more conclusion variables on queue */
+		}
+
+	} while (jump == true);
+	cout << "\nEnd of forward chaining part\n";
 }
 
 
@@ -514,8 +514,8 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 			cin >> trojan;
 			break;
 		case 9:
-			cout << "YES OR NO FOR INABILITY? “;
-			cin >> trojan;
+			cout << "YES OR NO FOR INABILITY? ";
+				cin >> trojan;
 			break;
 		case 10:
 			cout << "YES OR NO FOR SOLUTION? ";
@@ -594,7 +594,7 @@ program to make it better. */
 /* Install your IF clauses in sequence in the first case
    statement of the main program
    example: if((a1==2) && (a2==6)) s=1;
-					  if(j != ”NO") s=1;
+					  if(j != "NO") s=1;
    the then part of the above construction always
    contains s=1;
    install your the clauses in sequence in the second
@@ -623,7 +623,7 @@ void backward_chaining()
 	string clvarlt[241];	// 4 * 15 =  60
 	string varble;
 
-int back_clause_size = 10;
+	int back_clause_size = 10;
 
 	/* instantiated list */
 	int instlt[back_varlt_size + 1];
@@ -643,7 +643,7 @@ int back_clause_size = 10;
 		clausk[i] = 0;
 	}
 	for (i = 0; i <= back_varlt_size; i++)
-	{ 
+	{
 		varlt[i] = "";
 		instlt[i] = 0;
 	}
@@ -663,9 +663,9 @@ int back_clause_size = 10;
 
 
 	cout << "*** CONCLUSION LIST ***\n";
-	for (i = 1; i <= 24; i++) cout << "CONCLUSION ” <<  i << “ “ << conclt[i] << endl;
+	for (i = 1; i <= 24; i++) cout << "CONCLUSION " <<  i << " " << conclt[i] << endl;
 
-	cout << "HIT RETURN TO CONTINUE" << endl;
+		cout << "HIT RETURN TO CONTINUE" << endl;
 	cin.get();
 	cout << "*** VARIABLE LIST *\n";
 	/**** comment 367 *****/
@@ -680,46 +680,46 @@ int back_clause_size = 10;
 	variableListF.close();
 
 
-	for (i = 1; i <= back_varlt_size; i++) cout <<  "VARIABLE ” <<  i << “ ” << varlt[i] << endl;
-	cout << "HIT RETURN KEY TO CONTINUE" << endl;
+	for (i = 1; i <= back_varlt_size; i++) cout << "VARIABLE " <<  i << " " << varlt[i] << endl;
+		cout << "HIT RETURN KEY TO CONTINUE" << endl;
 	cin.get();
 	cout << "*** CLAUSE VARIABLE LIST ***\n";
 	/***** comment 407 through 409 ***/
-	
+
 	fstream clvarltFile;
 	clvarltFile.open("backward_clvarlt.txt", fstream::in);
 	string clauseVar;
 
-// GENERATE HASH
- 
-    /*
-    ACCESS = ACS
-    DOWNLOADED = DNL
-    VIRUS = VR
-    BREACH = BR
-    UNEXPLAINED = UNE
-    SYSTEM = SYS
-    NETWORK = NTW
-    EXPLANATION = EXP
-    VALUABLE = VAL
-    LOG-IN = LI
-    DEVICE = DV
-    NORMAL = NRM
-    BACKDOOR = BKD
-    TROJAN = TRJ
-    CREDIT = CRD
-    CHARGES = CHG
-    UNUSUALLY = UNU
-    INABILITY = INY
-    */
-    
-    stringMap backVarList;
-    
-    string defaultVal = "UIN"; // uninitialized
-    
-    backVarList = {{"ACS",defaultVal}, {"DNL",defaultVal}, {"VR",defaultVal}, {"BR",defaultVal}, {"UNE",defaultVal}, {"SYS",defaultVal}, \
-                   {"NTW",defaultVal}, {"EXP",defaultVal}, {"VAL",defaultVal}, {"LI",defaultVal}, {"DV",defaultVal}, {"NRM",defaultVal}, \
-                   {"BKD",defaultVal}, {"TRJ",defaultVal}, {"CRD",defaultVal}, {"CHG",defaultVal}, {"UNU",defaultVal}, {"INY",defaultVal}};
+	// GENERATE HASH
+
+		/*
+		ACCESS = ACS
+		DOWNLOADED = DNL
+		VIRUS = VR
+		BREACH = BR
+		UNEXPLAINED = UNE
+		SYSTEM = SYS
+		NETWORK = NTW
+		EXPLANATION = EXP
+		VALUABLE = VAL
+		LOG-IN = LI
+		DEVICE = DV
+		NORMAL = NRM
+		BACKDOOR = BKD
+		TROJAN = TRJ
+		CREDIT = CRD
+		CHARGES = CHG
+		UNUSUALLY = UNU
+		INABILITY = INY
+		*/
+
+	stringMap backVarList;
+
+	string defaultVal = "UIN"; // uninitialized
+
+	backVarList = { {"ACS",defaultVal}, {"DNL",defaultVal}, {"VR",defaultVal}, {"BR",defaultVal}, {"UNE",defaultVal}, {"SYS",defaultVal}, \
+				   {"NTW",defaultVal}, {"EXP",defaultVal}, {"VAL",defaultVal}, {"LI",defaultVal}, {"DV",defaultVal}, {"NRM",defaultVal}, \
+				   {"BKD",defaultVal}, {"TRJ",defaultVal}, {"CRD",defaultVal}, {"CHG",defaultVal}, {"UNU",defaultVal}, {"INY",defaultVal} };
 
 
 
@@ -729,30 +729,30 @@ int back_clause_size = 10;
 		getline(clvarltFile, clauseVar);
 		clvarlt[i] = clauseVar;
 	}
-	
+
 	clvarltFile.close();
-	
+
 	for (i = 1; i <= back_conclt_size; i++) {
-		cout << "** CLAUSE “ <<  i << endl;
-		for (j = 1; j < back_clause_size+ 1; j++)
-		{
-			k = back_clause_size* (i - 1) + j;
-			cout << "VARIABLE " << j << " " << clvarlt[k] << endl;
-		}
+		cout << "** CLAUSE " <<  i << endl;
+			for (j = 1; j < back_clause_size + 1; j++)
+			{
+				k = back_clause_size * (i - 1) + j;
+				cout << "VARIABLE " << j << " " << clvarlt[k] << endl;
+			}
 		// removed waiting at i = 4
 	}
 	/****** inference section *****/
-	cout << "** ENTER CONCLUSION ? "; 
-            cin >> varble;
+	cout << "** ENTER CONCLUSION ? ";
+	cin >> varble;
 	/* get conclusion statement number (sn) from the conclusion list
 	   (conclt) */
 	   /* first statement starts search */
 	do { // b520
 		f = 1;
 		determine_member_concl_list(&i, &f, &sn, varble, conclt);
-/* if sn = 0 then no conclusion of that name */
+		/* if sn = 0 then no conclusion of that name */
 		if (sn != 0 || jump == true) {
-			
+
 			do
 			{
 				if (jump == false)
@@ -762,11 +762,11 @@ int back_clause_size = 10;
 
 				do
 				{
-					
+
 					jump = false;
 					/* calculate clause location in clause-variable
 					   list */
-					i = (statsk[sp] - 1) * back_clause_size+ clausk[sp]; // b545
+					i = (statsk[sp] - 1) * back_clause_size + clausk[sp]; // b545
 					/* clause variable */
 					varble = clvarlt[i];
 					if (varble != "") {
@@ -921,7 +921,7 @@ int back_clause_size = 10;
 				   position knowledge base */
 				switch (sn) {
 					/* then part of statement 1 */
-				case 1: 
+				case 1:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
 					break;
@@ -1032,14 +1032,14 @@ int back_clause_size = 10;
 					clausk[sp] = clausk[sp] + 1;
 				}
 			}
-		if (sn == 0) {
-			cout << "\n*** NOT SUCCESSFUL\n”;
-			break;
+			if (sn == 0) {
+				cout << "\n*** NOT SUCCESSFUL\n";
+					break;
+
+			}
 
 		}
-	
-		}
-	// If user entered a value which is not from the conclusion list.
+		// If user entered a value which is not from the conclusion list.
 		if (sn == 0) {
 			cout << "\n** THE VALUE ENTERED IS NOT A CONCLUSION\n";
 			cout << "** ENTER CONCLUSION ? "; cin >> varble;
@@ -1124,7 +1124,7 @@ variable list (varlt) contains the variable (varble). */
 			   /***** comment 1700 ******/
 
 		// use these
-			
+
 		case 1: cout << "INPUT YES OR NO FOR ACCESS? ";
 			cin >> access;
 			break;
@@ -1187,6 +1187,5 @@ variable list (varlt) contains the variable (varble). */
 	}
 	*index = i;
 }
-
 
 
