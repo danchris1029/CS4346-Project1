@@ -4,9 +4,11 @@
 	Have these files in the same folder as this cpp file:
 			backward_clvarlt.txt
 			backward_conclusionlist.txt
+			backward_variablelist.txt
 			forward_clvarlt.txt
+			forward_variablelist.txt
 
-Compile using: g++ -o <exe name> main_full.cpp -std=c++11
+	Compile using: g++ -o <exe name> main_full.cpp -std=c++11
 
 	By: KirkWade Polasek, José Mayorga, Christian Guardiola
 
