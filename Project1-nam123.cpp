@@ -185,11 +185,11 @@ void Prevention_FW(stringMap& varList)
 			{
 				/* statement 1 */
 			case 1:
-				if ((condition == "MALICIOUS" || condition == "BASIC") && backdoor2 == N) s = 1;
+				if (condition == "MALICIOUS" && backdoor2 == N) s = 1;
 				break;
 				/* statement 2 */
 			case 2:
-				if ((condition == "MALICIOUS" || condition == "BASIC") && device == N) s = 1;
+				if (condition == "MALICIOUS" && device == N) s = 1;
 				break;
 				/* statement 3 */
 			case 3:
@@ -224,17 +224,17 @@ void Prevention_FW(stringMap& varList)
 				break;
 			case 16: if (condition == "IDENTITY" && charges == N && dropping == N) s = 1;
 				break;
-			case 17: if ((condition == "MALICIOUS" || condition == "BASIC") && trojan == N && backdoor1 == N) s = 1;
+			case 17: if (condition == "MALICIOUS" && trojan == N && backdoor1 == N) s = 1;
 				break;
-			case 18: if ((condition == "MALICIOUS" || condition == "BASIC") && trojan == Y && normal == Y) s = 1;
+			case 18: if (condition == "MALICIOUS" && trojan == Y && normal == Y) s = 1;
 				break;
-			case 19: if ((condition == "MALICIOUS" || condition == "BASIC") && trojan == Y && normal == N && device == N) s = 1;
+			case 19: if (condition == "MALICIOUS" && trojan == Y && normal == N && device == N) s = 1;
 				break;
-			case 20: if ((condition == "MALICIOUS" || condition == "BASIC") && trojan == Y && normal == N && device == Y) s = 1;
+			case 20: if (condition == "MALICIOUS" && trojan == Y && normal == N && device == Y) s = 1;
 				break;
-			case 21: if ((condition == "MALICIOUS" || condition == "BASIC") && trojan == Y && backdoor1 == Y && backdoor2 == Y) s = 1;
+			case 21: if (condition == "MALICIOUS" && trojan == Y && backdoor1 == Y && backdoor2 == Y) s = 1;
 				break;
-			case 22: if ((condition == "MALICIOUS" || condition == "BASIC") && trojan == Y && backdoor1 == Y && backdoor2 == N) s = 1;
+			case 22: if (condition == "MALICIOUS" && trojan == Y && backdoor1 == Y && backdoor2 == N) s = 1;
 				break;
 			case 23: if (condition == "DDOS" && inability1 == Y && inability2 == Y && inability3 == Y) s = 1;
 				break;
@@ -466,7 +466,7 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 		{
 			/* input statements for sample position knowledge base */
 		case 1:
-			cout << "PROGRAM IS MALICIOUS " << endl;
+			cout << "PROGRAM IS MALICIOUS OR BASIC" << endl;
 			break;
 		case 2:
 			cout << "YES OR NO FOR BACKDOOR2? ";
