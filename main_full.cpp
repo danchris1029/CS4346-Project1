@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 
 	cout << "Performing backward chaining to identify the type of attack.\n";
 
-	//Attacks_BW();
+	Attacks_BW();
 
 	cout << "Performing forward chaining to recommend possible preventions.\n";
 
