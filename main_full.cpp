@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
 
 	cout << "Performing backward chaining to identify the type of attack.\n";
 
-    stringMap hashMap = Attacks_BW();
+	stringMap hashMap = Attacks_BW();
 
 	cout << "Performing forward chaining to recommend possible preventions.\n";
 
@@ -71,9 +71,9 @@ void instantiate_forward(int* index, string v, string varlt[forward_varl_size + 
 
 void Prevention_FW(stringMap& varList)
 {
-   // Implementation: Produce the following; Knowledge base, clause variable list, variable list, conclusion variable queue and clause variable pointer.
-   // Follow through using the results from backward_chaining(), meaning a variable must be passed in order to process the rules.
-   // Traverse through the rules.
+	// Implementation: Produce the following; Knowledge base, clause variable list, variable list, conclusion variable queue and clause variable pointer.
+	// Follow through using the results from backward_chaining(), meaning a variable must be passed in order to process the rules.
+	// Traverse through the rules.
 
 	bool jump = false;
 
@@ -106,7 +106,7 @@ void Prevention_FW(stringMap& varList)
 	for (int i = 1; i <= forward_varl_size; i++) {
 		getline(variablelistFile, variable);
 		varlt[i] = variable.c_str();
-		cout << "HASH: " << varList[variable.c_str()] << endl;
+		//cout << "HASH: " << varList[variable.c_str()] << endl;
 	}
 
 	cout << "*** VARIABLE LIST ***\n";
@@ -164,14 +164,14 @@ void Prevention_FW(stringMap& varList)
 	which is in front of the queue (cndvar), this statement number
 	is located in the clause variable list (clvarlt) */
 	/* start at the beginning */
-	
-    //for (int index = 1; index <= forward_varl_size; index++){
-    //    if (varList[varlt[i]]){
-    //    cout << "SUCESS!" << endl;
-    //    }
-    //}
-	
-	
+
+	//for (int index = 1; index <= forward_varl_size; index++){
+	//    if (varList[varlt[i]]){
+	//    cout << "SUCESS!" << endl;
+	//    }
+	//}
+
+
 	f = 1;
 	do { // b496
 		jump = false;
@@ -201,7 +201,7 @@ void Prevention_FW(stringMap& varList)
 			/* sample IF-THEN statements from the position knowledge base */
 			string N = "NO";
 			string Y = "YES";
-            string condition = "F";
+			string condition = "F";
 			switch (sn)
 			{
 				/* statement 1 */
@@ -702,17 +702,22 @@ stringMap Attacks_BW()
 
 	for (int i = 1; i <= 24; i++) {
 		getline(conclusionListF, c);
-		conclt[i] = c;
+		conclt[i] = c.erase(c.size() - 1);
+		//cout << "c " << (conclt[i] == "MALICIOUS\r") << endl;
 	}
+
+    //for (int i = 0; i < conclt[1].size(); i++){
+    //   cout << (int)conclt[1][i] << endl;
+    //}
 
 	conclusionListF.close();
 
 
-	cout << "*** CONCLUSION LIST ***\n";
-	for (i = 1; i <= 24; i++) cout << "CONCLUSION " << i << " " << conclt[i] << endl;
+	//cout << "*** CONCLUSION LIST ***\n";
+	//for (i = 1; i <= 24; i++) cout << "CONCLUSION " << i << " " << conclt[i] << endl;
 
-	cout << "HIT RETURN TO CONTINUE" << endl;
-	cin.get();
+	//cout << "HIT RETURN TO CONTINUE" << endl;
+	//cin.get();
 	cout << "*** VARIABLE LIST *\n";
 	/**** comment 367 *****/
 	fstream variableListF;
@@ -726,9 +731,9 @@ stringMap Attacks_BW()
 	variableListF.close();
 
 
-	for (i = 1; i <= back_varlt_size; i++) cout << "VARIABLE " << i << " " << varlt[i] << endl;
-	cout << "HIT RETURN KEY TO CONTINUE" << endl;
-	cin.get();
+	//for (i = 1; i <= back_varlt_size; i++) cout << "VARIABLE " << i << " " << varlt[i] << endl;
+	//cout << "HIT RETURN KEY TO CONTINUE" << endl;
+	//cin.get();
 	cout << "*** CLAUSE VARIABLE LIST ***\n";
 	/***** comment 407 through 409 ***/
 
@@ -744,7 +749,7 @@ stringMap Attacks_BW()
 
 	clvarltFile.close();
 
-	for (i = 1; i <= back_conclt_size; i++) {
+	/*for (i = 1; i <= back_conclt_size; i++) {
 		cout << "** CLAUSE " << i << endl;
 		for (j = 1; j < back_clause_size + 1; j++)
 		{
@@ -752,7 +757,7 @@ stringMap Attacks_BW()
 			cout << "VARIABLE " << j << " " << clvarlt[k] << endl;
 		}
 		// removed waiting at i = 4
-	}
+	}*/
 	/****** inference section *****/
 	cout << "** ENTER CONCLUSION ? ";
 	cin >> varble;
@@ -760,7 +765,7 @@ stringMap Attacks_BW()
 	   (conclt) */
 	   /* first statement starts search */
 	do { // b520
-		f = 1;
+		f = 1; 
 		determine_member_concl_list(&i, &f, &sn, varble, conclt);
 		/* if sn = 0 then no conclusion of that name */
 		if (sn != 0 || jump == true) {
@@ -919,12 +924,13 @@ stringMap Attacks_BW()
 					/* search for conclusion starting at the
 					   next statement number */
 					f = statsk[sp] + 1;
+					
 					determine_member_concl_list(&i, &f, &sn, varble, conclt);
 					sp = sp + 1;
 				}
 				/* pop old conclusion and put on new one */
 			} while ((s != 1) && (sn != 0));  /* outer do-while loop */
-			
+
 			if (sn != 0) {
 				string Y = "YES";			// YES or NO char arrays
 				string N = "NO";
@@ -932,7 +938,7 @@ stringMap Attacks_BW()
 				/* if part true invoke then part */
 				/* then part of if-then statements from the
 				   position knowledge base */
-				
+
 				switch (sn) {
 					/* then part of statement 1 */
 				case 1:
@@ -1089,8 +1095,8 @@ stringMap Attacks_BW()
 	cin.get();
 	cin.get();
 	cout << endl;
-	
-	
+
+
 	// GENERATE HASH
 
 
@@ -1102,7 +1108,7 @@ stringMap Attacks_BW()
 	{"CHARGES", charges}, {"DROPPING", dropping}, {"SLOW", defaultVal}, {"RESTARTED", defaultVal}, {"INABILITY", inability1}, \
 	{"CONDITION", conditionVar} }; // Created as a hash table with uninitialized values as default
 
-	
+
 	return(backVarList);
 
 }
@@ -1117,14 +1123,19 @@ void determine_member_concl_list(int* index, int* f, int* sn, string varble, str
 	   conclusion list (conclt).  if yes return sn != 0.
 	   if not a member sn=0;
 	*/
+	//cout << (conclt[1] == "MALICIOUS\n") << endl;
+
 	/* initially set to not a member */
 	int i = *index;
 	*sn = 0;
 	/* member of conclusion list to be searched is f */
 	i = *f;
-	while (varble != conclt[i] && (i <= back_conclt_size))
+	while (varble != conclt[i] && (i <= back_conclt_size))//{
 		/* test for membership */
 		i = i + 1;
+		//if (i == 25) break;
+		//Cout << (varble == conclt[1]) << endl;}
+		//cout << sn << endl;}
 	if (varble == conclt[i]) *sn = i;  /* a member */
 
 	*index = i;
@@ -1238,3 +1249,8 @@ variable list (varlt) contains the variable (varble). */
 	}
 	*index = i;
 }
+
+
+
+
+
