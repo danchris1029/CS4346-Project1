@@ -469,7 +469,8 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 			cout << "PROGRAM IS MALICIOUS " << endl;
 			break;
 		case 2:
-			cout << "YES OR NO FOR BACKDOOR? ";
+			cout << "YES OR NO FOR BACKDOOR2? ";
+			cin >> backdoor2;
 			while (backdoor2 != "YES" && backdoor2 != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> backdoor2;
@@ -479,6 +480,7 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 			break;
 		case 3:
 			cout << "YES OR NO FOR DEVICE? ";
+			cin >> device;
 			while (device != "YES" && device != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> device;
@@ -491,6 +493,7 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 			break;
 		case 5:
 			cout << "YES OR NO FOR DROPPING? ";
+			cin >> dropping;
 			while (dropping != "YES" && dropping != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> dropping;
@@ -502,7 +505,8 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 			cout << "PROGRAM IS SLOW " << endl;
 			break;
 		case 7:
-			cout << "YES OR NO FOR SLOW? ";
+			cout << "YES OR NO FOR SLOW1? ";
+			cin >> slow1;
 			while (slow1 != "YES" && slow1 != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> slow1;
@@ -514,7 +518,8 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 			cout << "PROGRAM DDOS ATTACK " << endl;
 			break;
 		case 9:
-			cout << "YES OR NO FOR RESTARTED? ";
+			cout << "YES OR NO FOR RESTARTED2? ";
+			cin >> restarted2;
 			while (restarted2 != "YES" && restarted2 != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> restarted2;
@@ -523,7 +528,8 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 				cout << "Restart Router" << endl;
 			break;
 		case 10:
-			cout << "YES OR NO FOR INABILITY? ";
+			cout << "YES OR NO FOR INABILITY1? ";
+			cin >> inability1;
 			while (inability1 != "YES" && inability1 != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> inability1;
@@ -532,7 +538,8 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 				cout << "Configure your firewall or router to drop incoming ICMP packets or block DNS responses." << endl;
 			break;
 		case 11:
-			cout << "YES OR NO FOR INABILITY? ";
+			cout << "YES OR NO FOR INABILITY2? ";
+			cin >> inability2;
 			while (inability2 != "YES" && inability2 != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> inability2;
@@ -541,7 +548,8 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 				cout << "Move to a cloud-baesd DNS provider that can offer high  band width and multiple points-of-presence in data centers around the world." << endl;
 			break;
 		case 12:
-			cout << "YES OR NO FOR RESTARTED? ";
+			cout << "YES OR NO FOR RESTARTED1? ";
+			cin >> restarted1;
 			while (restarted1 != "YES" && restarted1 != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> restarted1;
@@ -550,7 +558,8 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 				cout << "Restart Router" << endl;
 			break;
 		case 13:
-			cout << "YES OR NO FOR BACKDOOR? ";
+			cout << "YES OR NO FOR BACKDOOR1? ";
+			cin >> backdoor1;
 			while (backdoor1 != "YES" && backdoor1 != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> backdoor1;
@@ -559,7 +568,8 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 				cout << "Factory reset your system to remove all extra added software or use a restore point." << endl;
 			break;
 		case 14:
-			cout << "YES OR NO FOR SLOW? ";
+			cout << "YES OR NO FOR SLOW2? ";
+			cin >> slow2;
 			while (slow2 != "YES" && slow2 != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> slow2;
@@ -569,6 +579,7 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 			break;
 		case 15:
 			cout << "YES OR NO FOR CHARGES? ";
+			cin >> charges;
 			while (charges != "YES" && charges != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> charges;
@@ -578,6 +589,7 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 			break;
 		case 16:
 			cout << "YES OR NO FOR TROJAN? ";
+			cin >> trojan;
 			while (trojan != "YES" && trojan != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> trojan;
@@ -585,6 +597,7 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 			break;
 		case 17:
 			cout << "YES OR NO FOR NORMAL? ";
+			cin >> normal;
 			while (normal != "YES" && normal != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> normal;
@@ -593,7 +606,8 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 				cout << "Using secpol.msc, Automatically deny elevation requests." << endl;
 			break;
 		case 18:
-			cout << "YES OR NO FOR INABILITY? ";
+			cout << "YES OR NO FOR INABILITY3? ";
+			cin >> inability3;
 			while (inability3 != "YES" && inability3 != "NO"){
 			    cout << "Enter YES or NO ";
 			    cin >> inability3;
