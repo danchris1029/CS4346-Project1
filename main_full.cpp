@@ -1,5 +1,14 @@
-﻿/*
-	// NOTE: Compile using: g++ -std=c++11
+﻿// Updated 10/4/2020 5:32 PM. 
+/*
+	// NOTE:
+	Have these files in the same folder as this cpp file:
+			backward_clvarlt.txt
+			backward_conclusionlist.txt
+			backward_variablelist.txt
+			forward_clvarlt.txt
+			forward_variablelist.txt
+
+	Compile using: g++ -o <exe name> main_full.cpp -std=c++11
 
 	By: KirkWade Polasek, José Mayorga, Christian Guardiola
 
@@ -22,46 +31,43 @@ typedef unordered_map<string, string> stringMap;
 
 //void forward_chaining(stringMap& backVarList);
 //stringMap backward_chaining();
-void forward_chaining();
-void backward_chaining();
-const int numRules = 15; /* number of rules */
-const int charLength = 20;
+void Prevention_FW();
+void Attacks_BW();
 
-char var[charLength];
-char access[charLength], downloaded[charLength], virus[charLength], breach[charLength], unexplained[charLength], sys[charLength], network[charLength],
-explanation[charLength], logIn[charLength], device[charLength], normal[charLength], backdoor[charLength], trojan[charLength], credit[charLength], charges[charLength],
-unusually[charLength], inability[charLength], malicious[charLength], basic[charLength], idAttack[charLength], idLeak[charLength], slow[charLength], ddos[charLength],
-solution[charLength], valuable[charLength];
+
+string var;
+string access, downloaded, virus, breach, unexplained, sys, network,
+explanation, logIn, device, normal, backdoor1, backdoor2, trojan, credit, charges,
+unusually, inability1, inability2, inability3, malicious, basic, idAttack, idLeak, slow1, slow2, ddos,
+solution, valuable, dropping, restarted1, restarted2;
+
 
 
 int main(int argc, char** argv) {
 
 	cout << "Performing backward chaining to identify the type of attack.\n";
 
-	// backVarList = backward_chaining();
-
-	backward_chaining();
+	//Attacks_BW();
 
 	cout << "Performing forward chaining to recommend possible preventions.\n";
 
-	//forward_chaining(backVarList);
-
-	forward_chaining();
+	Prevention_FW();
 
 	return 0;
 }
 
+const int forward_clvarlt_size = 96;
+const int forward_varl_size = 13;
 
-
-
-/* instantiated list*/
 
 // removed some global variables
-void check_instantiation(int* index, char v[], char(&varlt)[11][charLength], int instlt[]);
-void search(int* flag, int* sn, int* f, int* fp, char(&clvarlt)[91][charLength], char(&cndvar)[11][charLength], int* cn, int* k);
-void instantiate_forward(int* index, char v[], char(&varlt)[11][charLength], int instlt[], char(&cndvar)[11][charLength], int* bp);
+void check_instantiation(int* index, string v, string varlt[forward_varl_size + 1], int instlt[]);
+void search(int* flag, int* sn, int* f, int* fp, string clvarlt[forward_clvarlt_size + 1], string cndvar[forward_varl_size + 1], int* cn, int* k);
+void instantiate_forward(int* index, string v, string varlt[forward_varl_size + 1], int instlt[], string cndvar[forward_varl_size + 1], int* bp);
 
-void forward_chaining()
+
+
+void Prevention_FW()
 {
 
 	// Implementation: Produce the following; Knowledge base, clause variable list, variable list, conclusion variable queue and clause variable pointer.
@@ -94,60 +100,95 @@ void forward_chaining()
 
 	bool jump = false;
 
-	int instlt[11];
+	int instlt[forward_varl_size + 1];
 	int flag;
 	int f, i, j, k, s, fp   /* front pointer */;
 	int  bp  /* back pointer */, gr /* grade */, sn; /* statement number */
 	int cn;  /* clause number */
-	char cndvar[11][charLength];
-	char varlt[11][charLength], /* variable list*/ clvarlt[91][charLength]; /* clause var list */ // 4 * 15 =  60
-	char c[charLength], vp[charLength], /* condition variable */  v[charLength]; /*variable */
+	string cndvar[forward_varl_size + 1];
+	string varlt[forward_varl_size + 1], /* variable list*/ clvarlt[forward_clvarlt_size + 1]; /* clause var list */ // 4 * 15 =  60
+	string c, vp, /* condition variable */  v; /*variable */
+
+	int forward_clause_size = 4;
 
 	fp = 1;
 	bp = 1;
 
-	printf("HIT RETURN TO CONTINUE");
-	getchar();
 
-	// clause variables are inserted into clvarlt from the file "forward_clvarlt.txt"
+	//cout << "HIT RETURN TO CONTINUE" << endl;
+	//getchar();
+
+	// clause variables are inserted into clvarlt from the file "forward_clvarlt.txt"		
+
+
+
+	fstream variablelistFile;
+	variablelistFile.open("forward_variablelist.txt", fstream::in);
+	string variable;
+
+	for (int i = 1; i <= forward_varl_size; i++) {
+		getline(variablelistFile, variable);
+		varlt[i] = variable.c_str();
+	}
+
+	cout << "*** VARIABLE LIST ***\n";
+	for (j = 1; j <= forward_varl_size; j++)
+		cout << "VARIABLE " << j << " " << varlt[j] << endl;
+
+	variablelistFile.close();
+	cout << "Press any key to continue\n";
+	cin.get();
+
 	fstream clvarltFile;
 	clvarltFile.open("forward_clvarlt.txt", fstream::in);
 	string clauseVar;
 
-	for (int i = 1; i <= 91; i++) {
+	for (int i = 1; i <= forward_clvarlt_size; i++) {
 		getline(clvarltFile, clauseVar);
-		strcpy(clvarlt[i], clauseVar.c_str());
+		clvarlt[i] = clauseVar.c_str();
 	}
 
 	clvarltFile.close();
 
-	for (i = 1; i <= 24; i++) {
-		printf("** CLAUSE %d\n", i);
-		for (j = 1; j < 4 + 1; j++)
-		{
-			k = 4 * (i - 1) + j;
-			printf("VARIABLE %d  %s\n", j, clvarlt[k]);
-		}
+	/*for (i = 1; i <= 24; i++) {
+		cout << "** CLAUSE " << i << endl;
+			for (j = 1; j < forward_clause_size + 1; j++)
+			{
+				k = forward_clause_size * (i - 1) + j;
+				cout << "VARIABLE " << j <<  " " <<  clvarlt[k] << endl;
+			}
 		// removed waiting at i = 4
-	}
+	}*/
 
-	printf("*** CLAUSE-VARIABLE LIST ***\n");
-	for (i = 1; i < 24; i++)
+	cout << "*** CLAUSE-VARIABLE LIST ***\n";
+	for (i = 1; i <= 24; i++)
 	{
-		printf("** CLAUSE %d\n", i);
-		for (j = 1; j < 5; j++)
+		cout << "** CLAUSE " << i << endl;
+		for (j = 1; j <= 4; j++)
 		{
-			k = 4 * (i - 1) + j;
-			printf("VARIABLE %d  %s\n", j, clvarlt[k]);
+			k = forward_clause_size * (i - 1) + j;
+			cout << "VARIABLE " << j << " " << clvarlt[k] << endl;
 		}
 		// removed waiting at i = 4
 	}
 
 	/****** INFERENCE SECTION *****************/
-	printf("ENTER CONDITION VARIABLE? ");
-	cin >> c;
+	while (true) {
+		int leave = 0;
+		cout << "ENTER CONDITION VARIABLE? " << endl;
+		cin >> c;
+		for (int k = 1; k <= 11; k++) {
+			if (varlt[k] == c) {
+				leave = 1;
+				break;
+			}
+		}
+		if (leave)
+			break;
+		cout << "\nNOT A CONDITION VARIABLE " << endl;
+	}
 	/* place condition variable c on condition var queue cndvar */
-	strcpy(cndvar[bp], c);
+	cndvar[bp] = c;
 	/* move backpointer (bp) to back */
 	bp = bp + 1;
 	/* set the condition variable pointer consisting of the
@@ -160,55 +201,93 @@ void forward_chaining()
 	f = 1;
 	do { // b496
 		jump = false;
+		cn = 1;
 		search(&flag, &sn, &f, &fp, clvarlt, cndvar, &cn, &k);
 		/* point to first clause in statement */
-		cn = 1;
 		if (sn != 0) {
 			/* more statements */
 			/* locate the clause */
-			i = 4 * (sn - 1) + cn;
+			i = forward_clause_size * (sn - 1) + cn;
 			/* clause variable */
-			strcpy(v, clvarlt[i]);
+			v = clvarlt[i];
 			/* are there any more clauses for this statement */
-			while (strcmp(v, ""))
+			while (v != "")
 				/* more clauses */
 			{
 				/* check instantiation of this clause */
 				check_instantiation(&i, v, varlt, instlt);
 				cn = cn + 1;
 				/* check next clause */
-				i = 4 * (sn - 1) + cn;
-				strcpy(v, clvarlt[i]);
+				i = forward_clause_size * (sn - 1) + cn;
+				v = clvarlt[i];
 			}
 
 			/* no more clauses - check IF part of statement */
 			s = 0;
 			/* sample IF-THEN statements from the position knowledge base */
+			string N = "NO";
+			string Y = "YES";
+
 			switch (sn)
 			{
 				/* statement 1 */
-				/***** comment 1500 *****/
-			case 1: if (strcmp(backdoor, "NO") == 0) s = 1;
+			case 1:
+				if (backdoor2 == N) s = 1;
 				break;
 				/* statement 2 */
-				/***** comment 1510 *****/
 			case 2:
+				if (device == N) s = 1;
 				break;
 				/* statement 3 */
-				/***** comment 1540 *****/
 			case 3:
+				if (dropping == N) s = 1;
 				break;
 				/* statement 4 */
-				/***** comment 1550 *****/
-			case 4: if (strcmp(var, "") == 0) s = 1;
+			case 4: if (slow1 == N) s = 1;
 				break;
 				/* statement 5 */
-			case 5: if (strcmp(var, "") == 0) s = 1;
+			case 5: if (inability3 == N) s = 1;
 				break;
 				/* statement 6 */
-			case 6: if (strcmp(var, "") == 0) s = 1;
+			case 6: if (restarted2 == Y && inability1 == N) s = 1;
 				break;
-				/***** comment 1610 *****/					// Ghost statements
+			case 7: if (restarted2 == N && inability1 == N) s = 1;
+				break;
+			case 8: if (inability1 == Y && inability2 == N) s = 1;
+				break;
+			case 9: if (restarted1 == N && slow1 == N) s = 1;
+				break;
+			case 10: if (restarted1 == Y && slow1 == N) s = 1;
+				break;
+			case 11: if (restarted1 == Y && slow1 == Y) s = 1;
+				break;
+			case 12: if (slow1 == Y && slow2 == N) s = 1;
+				break;
+			case 13: if (slow1 == Y && slow2 == Y) s = 1;
+				break;
+			case 14: if (charges == Y && dropping == Y) s = 1;
+				break;
+			case 15: if (charges == N && dropping == Y) s = 1;
+				break;
+			case 16: if (charges == N && dropping == N) s = 1;
+				break;
+			case 17: if (trojan == N && backdoor1 == N) s = 1;
+				break;
+			case 18: if (trojan == Y && normal == Y) s = 1;
+				break;
+			case 19: if (trojan == Y && normal == N && device == N) s = 1;
+				break;
+			case 20: if (trojan == Y && normal == N && device == Y) s = 1;
+				break;
+			case 21: if (trojan == Y && backdoor1 == Y && backdoor2 == Y) s = 1;
+				break;
+			case 22: if (trojan == Y && backdoor1 == Y && backdoor2 == N) s = 1;
+				break;
+			case 23: if (inability1 == Y && inability2 == Y && inability3 == Y) s = 1;
+				break;
+			case 24: if (inability1 == Y && inability2 == Y && inability3 == N) s = 1;
+				break;
+
 			}
 
 
@@ -226,30 +305,154 @@ void forward_chaining()
 					/*********** comment 1500 ***********/
 					/* put variable on the conclusion variable queue */
 				case 1:
-					strcpy(solution, "TRUE");
-					printf("SOLUTION = TRUE\n");
-					strcpy(v, "SOLUTION");
+					solution = "NO";
+					cout << "PROBLEM UNSOLVED\n";
+					v = "SOLUTION";
 					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
 					break;
-					/*********** comment 1510 ***********/
 					/* put variable on the conclusion variable queue */
+
 				case 2:
+					solution = "NO";
+					cout << "PROBLEM UNSOLVED\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
 					break;
-					/*********** comment 1540 ***********/
 					/* put variable on the conclusion variable queue */
 				case 3:
+					solution = "YES";
+					cout << "PROBLEM SOLVED\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
 					break;
-					/*********** comment 1550 ***********/
 					/* put variable on the conclusion variable queue */
 				case 4:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
 					break;
 					/* put variable on the conclusion variable queue */
 				case 5:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
 					break;
 				case 6:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
 					break;
-					/*********** comment 1610 ***********/
-
+				case 7:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 8:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 9:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 10:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 11:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 12:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 13:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 14:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 15:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 16:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 17:
+					solution = "NO";
+					cout << "PROBLEM UNSOLVED\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 18:
+					solution = "NO";
+					cout << "PROBLEM UNSOLVED\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 19:
+					solution = "NO";
+					cout << "PROBLEM UNSOLVED\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 20:
+					solution = "NO";
+					cout << "PROBLEM UNSOLVED\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 21:
+					solution = "NO";
+					cout << "PROBLEM UNSOLVED\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 22:
+					solution = "NO";
+					cout << "PROBLEM UNSOLVED\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 23:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
+				case 24:
+					solution = "YES";
+					cout << "SOLUTION = YES\n";
+					v = "SOLUTION";
+					instantiate_forward(&i, v, varlt, instlt, cndvar, &bp);
+					break;
 				}
 
 			}
@@ -263,7 +466,7 @@ void forward_chaining()
 		the next variable (cndvar(fp+1)). If no more variables are
 		at the front of the queue, stop. */
 		/* next queue variable */
-		if (jump == false) {
+		if (jump == false && sn != 0) {
 			fp = fp + 1;
 			if (fp < bp)
 			{
@@ -275,22 +478,25 @@ void forward_chaining()
 		}
 
 	} while (jump == true);
+	//if (v == "")
+	//	cout << "\nNO SOLUTIONS FOUND" << endl;
 	cout << "\nEnd of forward chaining part\n";
 }
 
 
 //==========================================================================
+
 /* Routine to instantiate a variable (v) if it isn't already.
 The instantiate indication (instlt) is a 0 if not, a 1 if it is.
-The vriable list (varlt) contains the variable (v) */
-void check_instantiation(int* index, char v[], char(&varlt)[11][charLength], int instlt[])
+The variable list (varlt) contains the variable (v) */
+void check_instantiation(int* index, string v, string varlt[forward_varl_size + 1], int instlt[])
 {
 	int i = *index;
 
 	i = 1;
 
 	/* find variable in the variable list */
-	while ((strcmp(v, varlt[i]) != 0) && (i <= 11)) i = i + 1;
+	while (v != varlt[i] && (i <= forward_varl_size)) i = i + 1;
 
 	/* check if already instantiated */
 	if (instlt[i] != 1)
@@ -305,16 +511,86 @@ void check_instantiation(int* index, char v[], char(&varlt)[11][charLength], int
 		{
 			/* input statements for sample position knowledge base */
 		case 1:
-			printf("YES OR NO FOR BACKDOOR? ");
-			cin >> backdoor;
+			cout << "YES OR NO FOR BACKDOOR? ";
+			cin >> backdoor1;
+			if (backdoor1 == "YES")
+				cout << "Install the free Total AV. Use this to scan your system.";
 			break;
 		case 2:
-			printf("YES OR NO FOR VAR? ");
-			cin >> var;
+			cout << "YES OR NO FOR DEVICE? ";
+			cin >> device;
+			if (device == "YES")
+				cout << "Use the Active Directory and make your network use a Host-based firewall" << endl;
 			break;
 		case 3:
-			printf("YES OR NO FOR VAR? ");
-			cin >> var;
+			cout << "YES OR NO FOR DROPPING? ";
+			cin >> dropping;
+			if (dropping == "YES")
+				cout << "Change affected login account credentials. Contact your financial institution." << endl;
+			break;
+		case 4:
+			cout << "YES OR NO FOR SLOW? ";
+			cin >> slow1;
+			if (slow1 == "YES")
+				cout << "Restart System." << endl;
+			break;
+		case 5:
+			cout << "YES OR NO FOR INABILITY? ";
+			cin >> inability1;
+			if (inability1 == "YES")
+				cout << "Configure your firewall or router to drop incoming ICMP packets or block DNS responses." << endl;
+			break;
+		case 6:
+			cout << "YES OR NO FOR RESTARTED? ";
+			cin >> restarted1;
+			if (restarted1 == "NO")
+				cout << "Restart Router" << endl;
+			break;
+		case 7:
+			cout << "YES OR NO FOR RESTARTED? ";
+			cin >> restarted2;
+			if (restarted2 == "YES")
+				cout << "Restart Router" << endl;
+			break;
+		case 8:
+			cout << "YES OR NO FOR SLOW? ";
+			cin >> slow2;
+			if (slow2 == "YES")
+				cout << "Contact local network provider about better network solutions that they offer." << endl;
+			break;
+		case 9:
+			cout << "YES OR NO FOR CHARGES? ";
+			cin >> charges;
+			if (charges == "YES")
+				cout << "Change affected login account credentials. Contact your financial institution.s" << endl;
+			break;
+		case 10:
+			cout << "YES OR NO FOR TROJAN? ";
+			cin >> trojan;
+			break;
+		case 11:
+			cout << "YES OR NO FOR NORMAL? ";
+			cin >> normal;
+			if (normal == "YES")
+				cout << "Using secpol.msc, Automatically deny elevation requests." << endl;
+			break;
+		case 12:
+			cout << "YES OR NO FOR BACKDOOR? ";
+			cin >> backdoor2;
+			if (backdoor2 == "YES")
+				cout << "Factory reset your system to remove all extra added software or use a restore point." << endl;
+			break;
+		case 13:
+			cout << "YES OR NO FOR INABILITY? ";
+			cin >> inability2;
+			if (inability2 == "YES")
+				cout << "Move to a cloud-baesd DNS provider that can offer high  band width and multiple points-of-presence in data centers around the world." << endl;
+			break;
+		case 14:
+			cout << "YES OR NO FOR INABILITY? ";
+			cin >> inability3;
+			if (backdoor2 == "YES")
+				cout << "Akamai's DDoS mitigation." << endl;
 			break;
 		}
 	}
@@ -328,22 +604,22 @@ void check_instantiation(int* index, char v[], char(&varlt)[11][charLength], int
 one in front of the conclusion queue (cndvar). Return the statement
 number (sn). If there is no match, i.e., sn=0, the first statement
 for the space is f. */
-void search(int* flag, int* sn, int* f, int* fp, char(&clvarlt)[91][charLength], char(&cndvar)[11][charLength], int* cn, int* k)
+void search(int* flag, int* sn, int* f, int* fp, string clvarlt[forward_clvarlt_size + 1], string cndvar[forward_varl_size + 1], int* cn, int* k)
 {
 	*flag = 0;
 	*sn = *f;
 
-	while ((*flag == 0) && (*sn <= 11))
+	while ((*flag == 0) && (*sn <= 24))
 	{
 		*cn = 1;
 		*k = (*sn - 1) * 4 + *cn;
-		while ((strcmp(clvarlt[*k], cndvar[*fp]) != 0) && (*cn < 4))	// if variable in Conclusion variable queue is not equal to Clause variable
+		while (clvarlt[*k] != cndvar[*fp] && (*cn <= 4))	// if variable in Conclusion variable queue is not equal to Clause variable
 		{
 			*cn = *cn + 1;
 			*k = (*sn - 1) * 4 + *cn;
 		}
 
-		if (strcmp(clvarlt[*k], cndvar[*fp]) == 0) *flag = 1;
+		if (clvarlt[*k] == cndvar[*fp]) *flag = 1;
 		if (*flag == 0) *sn = *sn + 1;
 	}
 	if (*flag == 0) *sn = 0;
@@ -352,23 +628,23 @@ void search(int* flag, int* sn, int* f, int* fp, char(&clvarlt)[91][charLength],
 //==========================================================================
 /* Routine to instantiate a varialbe (v) and then place it on the
 back of the queue (cndvar[bp]), if it is not already there. */
-void instantiate_forward(int* index, char v[], char(&varlt)[11][charLength], int instlt[], char(&cndvar)[11][charLength], int* bp)
+void instantiate_forward(int* index, string v, string varlt[forward_varl_size + 1], int instlt[], string cndvar[forward_varl_size + 1], int* bp)
 {
 	int i = *index;
 	i = 1;
 	/* find varialbe in the varialbe list (varlt) */
-	while ((strcmp(v, varlt[i]) != 0) && (i <= 11)) i = i + 1;
+	while ((v != varlt[i]) && (i <= forward_varl_size)) i = i + 1;
 
 	/* instantiate it */
 	instlt[i] = 1;
 	i = 1;
 
 	/* determine if (v) is or already has been on the queue (cndvar) */
-	while ((strcmp(v, cndvar[i]) != 0) && (i <= 11)) i = i + 1;
+	while ((v != cndvar[i]) && (i <= forward_varl_size)) i = i + 1;
 	/* variable has not been on the queue. Store it in the back of the queue */
-	if (strcmp(v, cndvar[i]) != 0)
+	if (v != cndvar[i])
 	{
-		strcpy(cndvar[*bp], v);
+		cndvar[*bp] = v;
 		*bp = *bp + 1;
 	}
 
@@ -388,35 +664,36 @@ program to make it better. */
 /* Install your IF clauses in sequence in the first case
    statement of the main program
    example: if((a1==2) && (a2==6)) s=1;
-					  if(strcmp(j,NO") != 0) s=1;
+					  if(j != "NO") s=1;
    the then part of the above construction always
    contains s=1;
    install your the clauses in sequence in the second
    case statement of the main program
-   example strcpy(po,"YES");
  */
 
 const int back_conclt_size = 24;
 const int back_varlt_size = 18;
 
-void determine_member_concl_list(int* index, int* f, int* sn, char varble[], char(&conclt)[back_conclt_size + 1][charLength]);
+void determine_member_concl_list(int* index, int* f, int* sn, string varble, string conclt[]);
 void push_on_stack(int* sp, int* sn, int statsk[], int clausk[]);
-void instantiate_backward(int* index, char varble[], char varlt[][charLength], int instlt[]);
+void instantiate_backward(int* index, string varble, string varlt[], int instlt[]);
 
-void backward_chaining()
+
+void Attacks_BW()
 {
 	bool b520 = true;
 	bool b545 = true;
 	bool jump = false;
 
 	/*  conclusion list */
-	char conclt[back_conclt_size + 1][charLength];					// [number of elements in list][length of string]
+	string conclt[back_conclt_size + 1];					// [number of elements in list][length of string]
 	/*  variable list */
-	char varlt[back_varlt_size + 1][charLength];
+	string varlt[back_varlt_size + 1];
 	/*  clause vairable list */
-	char clvarlt[241][charLength];	// 4 * 15 =  60
-	char varble[charLength];
-	char buff[128];
+	string clvarlt[241];	// 4 * 15 =  60
+	string varble;
+
+	int back_clause_size = 10;
 
 	/* instantiated list */
 	int instlt[back_varlt_size + 1];
@@ -431,173 +708,54 @@ void backward_chaining()
 	sn = 0;
 	for (i = 0; i <= back_conclt_size; i++)
 	{
-		strcpy(conclt[i], "");
+		conclt[i] = "";
 		statsk[i] = 0;
 		clausk[i] = 0;
 	}
 	for (i = 0; i <= back_varlt_size; i++)
 	{
-		strcpy(varlt[i], "");
+		varlt[i] = "";
 		instlt[i] = 0;
 	}
 
 
-	for (i = 1; i <= 240; i++)  strcpy(clvarlt[i], "");
-	/* enter conclusions which are the variables in the then part,
-1 at
-		a time.  enter the conclusions in exact order starting at the 1st
-		if-then.  after last conclusion hit return key for rest of
-		conclusions */
-
-		/*** comment 305 *****/
-	std::fstream conclusionListF;
-	conclusionListF.open("backward_conclusionlist.txt", std::fstream::in);
-	std::string c;
+	for (i = 1; i <= 240; i++)  clvarlt[i] = "";
+	fstream conclusionListF;
+	conclusionListF.open("backward_conclusionlist.txt", fstream::in);
+	string c;
 
 	for (int i = 1; i <= 24; i++) {
 		getline(conclusionListF, c);
-		strcpy(conclt[i], c.c_str());
+		conclt[i] = c;
 	}
 
 	conclusionListF.close();
 
 
-	printf("*** CONCLUSION LIST ***\n");
-	for (i = 1; i <= 24; i++) printf("CONCLUSION %d %s\n", i, conclt[i]);
+	cout << "*** CONCLUSION LIST ***\n";
+	for (i = 1; i <= 24; i++) cout << "CONCLUSION " << i << " " << conclt[i] << endl;
 
-	printf("HIT RETURN TO CONTINUE");
-	fgets(buff, sizeof(buff), stdin);
-	/* enter variables which are in the if part, 1 at a time in the
-exact
-		order that they occur, up to 3 variables per if statement.  do not
-		duplicate any variable names.  any name is used only once.  if no
-		more variables left just hit return key. */
-	printf("*** VARIABLE LIST *\n");
+	cout << "HIT RETURN TO CONTINUE" << endl;
+	cin.get();
+	cout << "*** VARIABLE LIST *\n";
 	/**** comment 367 *****/
 	fstream variableListF;
-	variableListF.open("backward_variablelist.txt", std::fstream::in);
+	variableListF.open("backward_variablelist.txt", fstream::in);
 
-	for (int i = 1; i <= 18; i++) {
+	for (int i = 1; i <= back_varlt_size; i++) {
 		getline(variableListF, c);
-		strcpy(varlt[i], c.c_str());
+		varlt[i] = c;
 	}
 
 	variableListF.close();
 
 
-	for (i = 1; i <= back_varlt_size; i++) printf("VARIABLE %d %s\n", i, varlt[i]);
-	printf("HIT RETURN KEY TO CONTINUE");
-	fgets(buff, sizeof(buff), stdin);
-	/* enter variables as they appear in the if clauses.  a maximum
-of 3
-		variables per if statement.  if no more variables hit return
-key. */
-	printf("*** CLAUSE VARIABLE LIST ***\n");
+	for (i = 1; i <= back_varlt_size; i++) cout << "VARIABLE " << i << " " << varlt[i] << endl;
+	cout << "HIT RETURN KEY TO CONTINUE" << endl;
+	cin.get();
+	cout << "*** CLAUSE VARIABLE LIST ***\n";
 	/***** comment 407 through 409 ***/
-	/*
-	strcpy(clvarlt[1], "SYSTEM");
-	strcpy(clvarlt[2], "VIRUS");
-	strcpy(clvarlt[3], "DOWNLOADED");
-	strcpy(clvarlt[4], "BACKDOOR");
-	strcpy(clvarlt[5], "TROJAN");
 
-	strcpy(clvarlt[11], "SYSTEM");
-	strcpy(clvarlt[12], "VIRUS");
-	strcpy(clvarlt[13], "DOWNLOADED");
-	strcpy(clvarlt[14], "BACKDOOR");
-	strcpy(clvarlt[15], "DEVICE");
-	strcpy(clvarlt[16], "NORMAL");
-	strcpy(clvarlt[17], "TROJAN");
-
-	strcpy(clvarlt[21], "SYSTEM");
-	strcpy(clvarlt[22], "VIRUS");
-	strcpy(clvarlt[23], "DOWNLOADED");
-	strcpy(clvarlt[24], "DEVICE");
-	strcpy(clvarlt[25], "NORMAL");
-	strcpy(clvarlt[26], "TROJAN");
-
-	strcpy(clvarlt[31], "SYSTEM");
-	strcpy(clvarlt[32], "VIRUS");
-	strcpy(clvarlt[33], "ACCESS");
-	strcpy(clvarlt[34], "DOWNLOAD");
-	strcpy(clvarlt[35], "BACKDOOR");
-	strcpy(clvarlt[36], "TROJAN");
-
-	strcpy(clvarlt[41], "SYSTEM");
-	strcpy(clvarlt[42], "VIRUS");
-	strcpy(clvarlt[43], "ACCESS");
-	strcpy(clvarlt[44], "DOWNLOAD");
-	strcpy(clvarlt[45], "BACKDOOR");
-	strcpy(clvarlt[46], "DEVICE");
-	strcpy(clvarlt[47], "NORMAL");
-	strcpy(clvarlt[48], "TROJAN");
-
-	strcpy(clvarlt[51], "SYSTEM");
-	strcpy(clvarlt[52], "VIRUS");
-	strcpy(clvarlt[53], "ACCESS");
-	strcpy(clvarlt[54], "DOWNLOAD");
-	strcpy(clvarlt[55], "DEVICE");
-	strcpy(clvarlt[56], "NORMAL");
-	strcpy(clvarlt[57], "TROJAN");
-
-	strcpy(clvarlt[61], "SYSTEM");
-	strcpy(clvarlt[62], "VIRUS");
-	strcpy(clvarlt[63], "ACCESS");
-	strcpy(clvarlt[64], "DEVICE");
-	strcpy(clvarlt[65], "NORMAL");
-	strcpy(clvarlt[66], "TROJAN");
-
-	strcpy(clvarlt[71], "DEVICE");
-	strcpy(clvarlt[72], "NORMAL");
-	strcpy(clvarlt[73], "TROJAN");
-
-	strcpy(clvarlt[81], "CHARGES");
-	strcpy(clvarlt[82], "CREDIT");
-
-	strcpy(clvarlt[101], "SYSTEM");
-	strcpy(clvarlt[102], "BREACH");
-	strcpy(clvarlt[103], "UNEXPLAINED");
-	strcpy(clvarlt[104], "LOGIN");
-	strcpy(clvarlt[105], "VIRUS");
-	strcpy(clvarlt[106], "ACCESS");
-	strcpy(clvarlt[107], "DEVICE");
-	strcpy(clvarlt[108], "NORMAL");
-	strcpy(clvarlt[109], "TROJAN");
-
-	strcpy(clvarlt[111], "SYSTEM");
-	strcpy(clvarlt[112], "BREACH");
-	strcpy(clvarlt[113], "UNEXPLAINED");
-	strcpy(clvarlt[114], "LOGIN");
-	strcpy(clvarlt[115], "VIRUS");
-	strcpy(clvarlt[116], "ACCESS");
-	strcpy(clvarlt[117], "DEVICE");
-
-	strcpy(clvarlt[121], "SYSTEM");
-	strcpy(clvarlt[122], "BREACH");
-	strcpy(clvarlt[123], "LOGIN");
-	strcpy(clvarlt[124], "ACCESS");
-	strcpy(clvarlt[125], "DOWNLOAD");
-	strcpy(clvarlt[126], "DEVICE");
-	strcpy(clvarlt[127], "NORMAL");
-	strcpy(clvarlt[128], "TROJAN");
-
-	strcpy(clvarlt[131], "SYSTEM");
-	strcpy(clvarlt[132], "BREACH");
-	strcpy(clvarlt[133], "LOGIN");
-	strcpy(clvarlt[134], "ACCESS");
-	strcpy(clvarlt[135], "DOWNLOAD");
-	strcpy(clvarlt[136], "BACKDOOR");
-	strcpy(clvarlt[137], "DEVICE");
-	strcpy(clvarlt[138], "NORMAL");
-	strcpy(clvarlt[139], "TROJAN");
-
-	strcpy(clvarlt[141], "SYSTEM");
-	strcpy(clvarlt[142], "BREACH");
-	strcpy(clvarlt[143], "LOGIN");
-	strcpy(clvarlt[144], "UNEXPLAINED");
-	strcpy(clvarlt[145], "CHARGER");
-	strcpy(clvarlt[146], "CREDIT");
-	*/
 	fstream clvarltFile;
 	clvarltFile.open("backward_clvarlt.txt", fstream::in);
 	string clauseVar;
@@ -639,47 +797,49 @@ key. */
 
 	for (int i = 1; i <= 240; i++) {
 		getline(clvarltFile, clauseVar);
-		strcpy(clvarlt[i], clauseVar.c_str());
+		clvarlt[i] = clauseVar;
 	}
 
 	clvarltFile.close();
 
 	for (i = 1; i <= back_conclt_size; i++) {
-		printf("** CLAUSE %d\n", i);
-		for (j = 1; j < 10 + 1; j++)
+		cout << "** CLAUSE " << i << endl;
+		for (j = 1; j < back_clause_size + 1; j++)
 		{
-			k = 10 * (i - 1) + j;
-			printf("VARIABLE %d  %s\n", j, clvarlt[k]);
+			k = back_clause_size * (i - 1) + j;
+			cout << "VARIABLE " << j << " " << clvarlt[k] << endl;
 		}
 		// removed waiting at i = 4
 	}
 	/****** inference section *****/
-	printf("** ENTER CONCLUSION ? "); cin >> varble;
+	cout << "** ENTER CONCLUSION ? ";
+	cin >> varble;
 	/* get conclusion statement number (sn) from the conclusion list
 	   (conclt) */
 	   /* first statement starts search */
 	do { // b520
 		f = 1;
 		determine_member_concl_list(&i, &f, &sn, varble, conclt);
+		/* if sn = 0 then no conclusion of that name */
 		if (sn != 0 || jump == true) {
-			/* if sn = 0 then no conclusion of that name */ do
-				/* push statement number (sn) and clause number=1 on
-				goal
-						 stack which is composed of the statement stack
-					(statsk)
-						 and clause stack (clausk) */
+
+			do
 			{
 				if (jump == false)
 					push_on_stack(&sp, &sn, statsk, clausk);
+				/* push statement number (sn) and clause number=1 on
+				goal stack which is composed of the statement stack (statsk) and clause stack (clausk) */
+
 				do
 				{
+
+					jump = false;
 					/* calculate clause location in clause-variable
 					   list */
-					jump = false;
-					i = (statsk[sp] - 1) * 10 + clausk[sp]; // b545
+					i = (statsk[sp] - 1) * back_clause_size + clausk[sp]; // b545
 					/* clause variable */
-					strcpy(varble, clvarlt[i]);
-					if (strcmp(varble, "") != 0) {
+					varble = clvarlt[i];
+					if (varble != "") {
 						/*is this clause variable a conclusion? */
 						f = 1;
 						determine_member_concl_list(&i, &f, &sn, varble, conclt);
@@ -692,103 +852,119 @@ key. */
 						instantiate_backward(&i, varble, varlt, instlt);
 						clausk[sp] = clausk[sp] + 1;
 					}
-				} while (strcmp(varble, "") != 0); /*do-while*/
+				} while (varble != ""); /*do-while*/
 				if (jump)
 					break;
 				/*no more clauses check if part of statement */
 				sn = statsk[sp];
 				s = 0;
 
-				char Y[] = "YES";			// YES or NO char arrays
-				char N[] = "NO";
+				string Y = "YES";			// YES or NO char arrays
+				string N = "NO";
 				/**** if then statements ****/
-				/* sample if parts of if then statements from
+				/* if parts of if then statements from
 				   the position knowledge base */
 				switch (sn) {
 					/* if part of statement 1 */
-					/****** comment 1500 ****/
 
 				// Use the knowledge base on the google docs
 					/* statement 1 */
-
-				case 1: if (strcmp(sys, Y) == 0 && strcmp(virus, Y) == 0 && strcmp(downloaded, Y) == 0
-					&& strcmp(backdoor, Y) == 0 && strcmp(trojan, N) == 0) s = 1;
+				case 1: if (sys.compare(Y) == 0 && virus.compare(Y) == 0 && downloaded.compare(Y) == 0
+					&& backdoor1.compare(Y) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 2 */
-				case 2: if (strcmp(sys, Y) == 0 && strcmp(virus, Y) == 0 && strcmp(downloaded, Y) == 0
-					&& strcmp(backdoor, N) == 0 && strcmp(device, N) == 0 && strcmp(normal, N) == 0 && strcmp(trojan, N) == 0) s = 1;
+				case 2: if (sys.compare(Y) == 0 && virus.compare(Y) == 0 && downloaded.compare(Y) == 0
+					&& backdoor1.compare(N) == 0 && device.compare(N) == 0 && normal.compare(N) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 3 */
-				case 3: if (strcmp(sys, Y) == 0 && strcmp(virus, Y) == 0 && strcmp(downloaded, N) == 0
-					&& strcmp(device, N) == 0 && strcmp(normal, N) == 0 && strcmp(trojan, N) == 0) s = 1;
+				case 3: if (sys.compare(Y) == 0 && virus.compare(Y) == 0 && downloaded.compare(N) == 0
+					&& device.compare(N) == 0 && normal.compare(N) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 4 */
-					/***** comment 1550 *****/
-				case 4: if (strcmp(sys, Y) == 0 && strcmp(virus, N) == 0 && strcmp(access, Y) == 0
-					&& strcmp(downloaded, Y) == 0 && strcmp(backdoor, Y) == 0 && strcmp(trojan, N) == 0) s = 1;
+				case 4: if (sys.compare(Y) == 0 && virus.compare(N) == 0 && access.compare(Y) == 0
+					&& downloaded.compare(Y) == 0 && backdoor1.compare(Y) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 5 */
-				case 5: if (strcmp(sys, Y) == 0 && strcmp(virus, N) == 0 && strcmp(access, Y) == 0
-					&& strcmp(downloaded, Y) == 0 && strcmp(backdoor, N) == 0 && strcmp(device, N) == 0 && strcmp(normal, N) == 0
-					&& strcmp(trojan, N) == 0) s = 1;
+				case 5: if (sys.compare(Y) == 0 && virus.compare(N) == 0 && access.compare(Y) == 0
+					&& downloaded.compare(Y) == 0 && backdoor1.compare(N) == 0 && device.compare(N) == 0 && normal.compare(N) == 0
+					&& trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 6 */
-				case 6: if (strcmp(sys, Y) == 0 && strcmp(virus, N) == 0 && strcmp(access, Y) == 0
-					&& strcmp(downloaded, N) == 0 && strcmp(device, N) == 0 && strcmp(normal, N) == 0
-					&& strcmp(trojan, N) == 0) s = 1;
+				case 6: if (sys.compare(Y) == 0 && virus.compare(N) == 0 && access.compare(Y) == 0
+					&& downloaded.compare(N) == 0 && device.compare(N) == 0 && normal.compare(N) == 0
+					&& trojan.compare(N) == 0) s = 1;
 					break;
-					/***** comment 1610 *****/					// Ghost statements
 					/* statement 7 */
-				case 7:	if (strcmp(sys, Y) == 0 && strcmp(virus, N) == 0 && strcmp(access, N) == 0
-					&& strcmp(device, N) == 0 && strcmp(normal, N) == 0
-					&& strcmp(trojan, N) == 0) s = 1;
+				case 7:	if (sys.compare(Y) == 0 && virus.compare(N) == 0 && access.compare(N) == 0
+					&& device.compare(N) == 0 && normal.compare(N) == 0
+					&& trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 8 */
-				case 8: if (strcmp(device, Y) == 0 && strcmp(normal, Y) == 0
-					&& strcmp(trojan, Y) == 0) s = 1;
+				case 8: if (device.compare(Y) == 0 && normal.compare(Y) == 0
+					&& trojan.compare(Y) == 0) s = 1;
 					break;
 					/* statement 9 */
-				case 9: if (strcmp(charges, Y) == 0 && strcmp(credit, Y) == 0) s = 1;
+				case 9: if (charges.compare(Y) == 0 && credit.compare(Y) == 0) s = 1;
 					break;
 					/* statement 10 */
-				case 10:  if (strcmp(sys, N) == 0 && strcmp(breach, N) == 0 && strcmp(logIn, N) == 0
-					&& strcmp(virus, N) == 0 && strcmp(access, N) == 0 && strcmp(device, N) == 0
-					&& strcmp(normal, N) == 0 && strcmp(trojan, N) == 0) s = 1;
+				case 10:  if (sys.compare(N) == 0 && breach.compare(N) == 0 && logIn.compare(N) == 0
+					&& virus.compare(N) == 0 && access.compare(N) == 0 && device.compare(N) == 0
+					&& normal.compare(N) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 11 */
 
-				case 11: if (strcmp(var, "") == 0) s = 1;
+				case 11: if (sys.compare(N) == 0 && breach.compare(Y) == 0 && unexplained.compare(N) == 0
+					&& logIn.compare(N) == 0 && virus.compare(N) == 0 && access.compare(N) == 0
+					&& device.compare(N) == 0 && normal.compare(N) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 12 */
-				case 12: if (strcmp(var, "") == 0) s = 1;
+				case 12: if (sys.compare(N) == 0 && breach.compare(Y) == 0 && logIn.compare(Y) == 0
+					&& access.compare(Y) == 0 && downloaded.compare(Y) == 0 && backdoor1.compare(Y) == 0
+					&& trojan.compare(N) == 0 && normal.compare(N) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 13 */
-				case 13: if (strcmp(var, "") == 0) s = 1;
+				case 13: if (sys.compare(N) == 0 && breach.compare(N) == 0 && logIn.compare(Y) == 0
+					&& access.compare(Y) == 0 && downloaded.compare(N) == 0 && device.compare(N) == 0
+					&& normal.compare(N) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 14 */
-				case 14: if (strcmp(var, "") == 0) s = 1;
+				case 14: if (sys.compare(N) == 0 && breach.compare(N) == 0 && logIn.compare(Y) == 0
+					&& access.compare(Y) == 0 && downloaded.compare(Y) == 0 && backdoor1.compare(N) == 0
+					&& device.compare(N) == 0 && normal.compare(N) == 0 && trojan.compare(N) == 0) s = 1;
 					break;
 					/* statement 15 */
-				case 15: if (strcmp(var, "") == 0) s = 1;
+				case 15: if (sys.compare(N) == 0 && breach.compare(N) == 0 && logIn.compare(Y) == 0
+					&& logIn.compare(Y) == 0 && unexplained.compare(Y) == 0 && charges.compare(N) == 0
+					&& credit.compare(N) == 0) s = 1;
 					break;
-				case 16: if (strcmp(var, "") == 0) s = 1;
+				case 16: if (sys.compare(N) == 0 && breach.compare(N) == 0 && logIn.compare(Y) == 0
+					&& unexplained.compare(Y) == 0 && charges.compare(N) == 0
+					&& credit.compare(Y) == 0) s = 1;
 					break;
-				case 17: if (strcmp(var, "") == 0) s = 1;
+				case 17: if (sys.compare(N) == 0 && breach.compare(N) == 0 && logIn.compare(Y) == 0
+					&& unexplained.compare(Y) == 0 && charges.compare(Y) == 0) s = 1;
 					break;
-				case 18: if (strcmp(var, "") == 0) s = 1;
+				case 18: if (sys.compare(N) == 0 && breach.compare(Y) == 0
+					&& unexplained.compare(Y) == 0 && charges.compare(N) == 0
+					&& credit.compare(N) == 0) s = 1;
 					break;
-				case 19: if (strcmp(var, "") == 0) s = 1;
+				case 19: if (sys.compare(N) == 0 && breach.compare(Y) == 0
+					&& unexplained.compare(Y) == 0 && charges.compare(N) == 0
+					&& credit.compare(Y) == 0) s = 1;
 					break;
-				case 20: if (strcmp(var, "") == 0) s = 1;
+				case 20: if (sys.compare(N) == 0 && breach.compare(Y) == 0
+					&& unexplained.compare(Y) == 0 && charges.compare(Y) == 0) s = 1;
 					break;
-				case 21: if (strcmp(var, "") == 0) s = 1;
+				case 21: if (network.compare(Y) == 0 && explanation.compare(Y) == 0) s = 1;
 					break;
-				case 22: if (strcmp(var, "") == 0) s = 1;
+				case 22: if (network.compare(Y) == 0 && explanation.compare(N) == 0 && inability1.compare(Y) == 0) s = 1;
 					break;
-				case 23: if (strcmp(var, "") == 0) s = 1;
+				case 23: if (network.compare(Y) == 0 && explanation.compare(N) == 0 && inability1.compare(N) == 0 && unusually.compare(Y) == 0) s = 1;
 					break;
-				case 24: if (strcmp(var, "") == 0) s = 1;
+				case 24: if (inability1.compare(N) == 0 && unusually.compare(N) == 0) s = 1;
 					break;
+
+
 
 				}
 				/* see if the then part should be invoked */
@@ -797,7 +973,7 @@ key. */
 					   same conclusion */
 					   /* get conclusion */
 					i = statsk[sp];
-					strcpy(varble, conclt[i]);
+					varble = conclt[i];
 					/* search for conclusion starting at the
 					   next statement number */
 					f = statsk[sp] + 1;
@@ -807,29 +983,116 @@ key. */
 				/* pop old conclusion and put on new one */
 			} while ((s != 1) && (sn != 0));  /* outer do-while loop */
 			if (sn != 0) {
+				string Y = "YES";			// YES or NO char arrays
+				string N = "NO";
+
 				/* if part true invoke then part */
 				/* then part of if-then statements from the
 				   position knowledge base */
 				switch (sn) {
 					/* then part of statement 1 */
-					/******* comment 1500 *******/
-				case 1: strcpy(malicious, "YES");
-					printf("MALICIOUS = YES");
+				case 1:
+					malicious = Y;
+					cout << "MALICIOUS = YES" << endl;
 					break;
-					/* then part of statement 2 */
-					/****** comment 1510 ******/
 				case 2:
+					malicious = Y;
+					cout << "MALICIOUS = YES" << endl;
 					break;
-					/* then part of statement 3 */
 				case 3:
+					malicious = Y;
+					cout << "MALICIOUS = YES" << endl;
 					break;
-					/****** comment 1680 ********/
+				case 4:
+					malicious = Y;
+					cout << "MALICIOUS = YES" << endl;
+					break;
+				case 5:
+					malicious = Y;
+					cout << "MALICIOUS = YES" << endl;
+					break;
+				case 6:
+					malicious = Y;
+					cout << "MALICIOUS = YES" << endl;
+					break;
+				case 7:
+					malicious = Y;
+					cout << "MALICIOUS = YES" << endl;
+					break;
+				case 8:
+					basic = Y;
+					cout << "BASIC = YES" << endl;
+					break;
+				case 9:
+					idAttack = Y;
+					cout << "IDATTACK = YES" << endl;
+					break;
+				case 10:
+					malicious = Y;
+					cout << "MALICIOUS = YES" << endl;
+					break;
+				case 11:
+					malicious = Y;
+					cout << "MALICIOUS = YES" << endl;
+					break;
+				case 12:
+					malicious = Y;
+					cout << "MALICIOUS = YES" << endl;
+					break;
+				case 13:
+					malicious = Y;
+					cout << "MALICIOUS = YES" << endl;
+					break;
+				case 14:
+					malicious = Y;
+					cout << "MALICIOUS = YES" << endl;
+					break;
+				case 15:
+					idLeak = Y;
+					cout << "IDLEAK = YES" << endl;
+					break;
+				case 16:
+					idAttack = Y;
+					cout << "IDATTACK = YES" << endl;
+					break;
+				case 17:
+					idAttack = Y;
+					cout << "IDATTACK = YES" << endl;
+					break;
+				case 18:
+					idLeak = Y;
+					cout << "IDLEAK = YES" << endl;
+					break;
+				case 19:
+					idAttack = Y;
+					cout << "IDATTACK = YES" << endl;
+					break;
+				case 20:
+					idAttack = Y;
+					cout << "IDATTACK = YES" << endl;
+					break;
+				case 21:
+					slow1 = Y;
+					cout << "SLOW = YES" << endl;
+					break;
+				case 22:
+					ddos = Y;
+					cout << "DDOS = YES" << endl;
+					break;
+				case 23:
+					ddos = Y;
+					cout << "DDOS = YES" << endl;
+					break;
+				case 24:
+					slow1 = Y;
+					cout << "SLOW = YES" << endl;
+					break;
 				}
 				/* pop the stack */
 				sp = sp + 1;
 				if (sp >= 11) {
 					/* finished */
-					printf("*** SUCCESS\n");
+					cout << "*** SUCCESS\n";
 					break;
 				}
 
@@ -840,21 +1103,35 @@ key. */
 				}
 			}
 			if (sn == 0) {
-				printf("\n*** NOT SUCCESSFUL\n");
+				cout << "\n*** NOT SUCCESSFUL\n";
 				break;
 
 			}
+
 		}
+		// If user entered a value which is not from the conclusion list.
+		if (sn == 0) {
+			cout << "\n** THE VALUE ENTERED IS NOT A CONCLUSION\n";
+			cout << "** ENTER CONCLUSION ? "; cin >> varble;
+		}
+
 	} while (true);
 	cout << "\nEnd of backward chaining part\n";
+	cout << "\nPress any key to continue...";
+	cin.get();
+	cin.get();
+	cout << endl;
 	//return(backVarList);
+
+
 }
 
+//==========================================================================
 /*
 * varble: char array of variable name
 * conclt: 2-d char array of conclusion list
 */
-void determine_member_concl_list(int* index, int* f, int* sn, char varble[], char(&conclt)[back_conclt_size + 1][charLength]) {
+void determine_member_concl_list(int* index, int* f, int* sn, string varble, string conclt[]) {
 	/* routine to determine if a variable (varble) is a member of the
 	   conclusion list (conclt).  if yes return sn != 0.
 	   if not a member sn=0;
@@ -864,14 +1141,15 @@ void determine_member_concl_list(int* index, int* f, int* sn, char varble[], cha
 	*sn = 0;
 	/* member of conclusion list to be searched is f */
 	i = *f;
-	while ((strcmp(varble, conclt[i]) != 0) && (i <= back_conclt_size))
+	while (varble != conclt[i] && (i <= back_conclt_size))
 		/* test for membership */
 		i = i + 1;
-	if (strcmp(varble, conclt[i]) == 0) *sn = i;  /* a member */
+	if (varble == conclt[i]) *sn = i;  /* a member */
 
 	*index = i;
 }
 
+//==========================================================================
 /*
 * statsk: int array for statement stack
 * clausk: int array of clause stack
@@ -886,12 +1164,13 @@ clause stack (clausk)..to push decrement stack pointer (sp) */
 	clausk[*sp] = 1;
 }
 
+//==========================================================================
 /*
 * varble: char array of variable name
 * varlt: 2-d char array for variable list
 * instlt: int array for instantiated list
 */
-void instantiate_backward(int* index, char varble[], char varlt[][charLength], int instlt[])
+void instantiate_backward(int* index, string varble, string varlt[], int instlt[])
 /* routine to instantiate a variable (varble) if it isn't already.  the
 instantiate indication (instlt) is a 0 if not, a 1 if it is.  the
 variable list (varlt) contains the variable (varble). */
@@ -899,8 +1178,8 @@ variable list (varlt) contains the variable (varble). */
 	int i = *index;
 	i = 1;
 	/* find variable in the list */
-	while ((strcmp(varble, varlt[i]) != 0) && (i <= back_conclt_size)) i = i + 1;
-	if ((strcmp(varble, varlt[i]) == 0) && (instlt[i] != 1))
+	while (varble != varlt[i] && (i <= back_conclt_size)) i = i + 1;
+	if (varble == varlt[i] && (instlt[i] != 1))
 		/*found variable and not already instantiated */
 	{
 		instlt[i] = 1; /*mark instantiated */
@@ -915,91 +1194,66 @@ variable list (varlt) contains the variable (varble). */
 			   /***** comment 1700 ******/
 
 		// use these
-			/*
-		strcpy(varlt[1], "ACCESS");
-		strcpy(varlt[2], "DOWNLOADED");
-		strcpy(varlt[3], "VIRUS");
-		strcpy(varlt[4], "BREACH");
-		strcpy(varlt[5], "UNEXPLAINED");
-		strcpy(varlt[6], "SYSTEM");
-		strcpy(varlt[7], "NETWORK");
-		strcpy(varlt[8], "EXPLANATION");
-		strcpy(varlt[9], "VALUABLE");
-		strcpy(varlt[10], "LOGIN");
-		strcpy(varlt[11], "DEVICE");
-		strcpy(varlt[12], "NORMAL");
-		strcpy(varlt[13], "BACKDOOR");
-		strcpy(varlt[14], "TROJAN");
-		strcpy(varlt[15], "CREDIT");
-		strcpy(varlt[16], "CHARGES");
-		strcpy(varlt[17], "UNUSUALLY");
-		strcpy(varlt[18], "INABILITY");
-		*/
 
-		case 1: printf("INPUT YES OR NO FOR ACCESS? ");
+		case 1: cout << "INPUT YES OR NO FOR ACCESS? ";
 			cin >> access;
 			break;
-		case 2: printf("INPUT YES OR NO FOR DOWNLOADED? ");
+		case 2: cout << "INPUT YES OR NO FOR DOWNLOADED? ";
 			cin >> downloaded;
 			break;
-		case 3: printf("INPUT YES OR NO FOR VIRUS? ");
+		case 3: cout << "INPUT YES OR NO FOR VIRUS? ";
 			cin >> virus;
 			break;
-		case 4: printf("INPUT YES OR NO FOR BREACH? ");
+		case 4: cout << "INPUT YES OR NO FOR BREACH? ";
 			cin >> breach;
 			break;
-		case 5: printf("INPUT YES OR NO FOR UNEXPLAINED? ");
+		case 5: cout << "INPUT YES OR NO FOR UNEXPLAINED? ";
 			cin >> unexplained;
 			break;
-		case 6: printf("INPUT YES OR NO FOR SYSTEM? ");
+		case 6: cout << "INPUT YES OR NO FOR SYSTEM? ";
 			cin >> sys;
 			break;
-		case 7: printf("INPUT YES OR NO FOR NETWORK? ");
+		case 7: cout << "INPUT YES OR NO FOR NETWORK? ";
 			cin >> network;
 			break;
-		case 8: printf("INPUT YES OR NO FOR EXPLANATION? ");
+		case 8: cout << "INPUT YES OR NO FOR EXPLANATION? ";
 			cin >> explanation;
 			break;
-		case 9: printf("INPUT YES OR NO FOR VALUABLE? ");
+		case 9: cout << "INPUT YES OR NO FOR VALUABLE? ";
 			cin >> valuable;
 			break;
-		case 10: printf("INPUT YES OR NO FOR LOGIN? ");
+		case 10: cout << "INPUT YES OR NO FOR LOGIN? ";
 			cin >> logIn;
 			break;
-		case 11: printf("INPUT YES OR NO FOR DEVICE? ");
+		case 11: cout << "INPUT YES OR NO FOR DEVICE? ";
 			cin >> device;
 			break;
-		case 12: printf("INPUT YES OR NO FOR NORMAL? ");
+		case 12: cout << "INPUT YES OR NO FOR NORMAL? ";
 			cin >> normal;
 			break;
-		case 13: printf("INPUT YES OR NO FOR BACKDOOR? ");
-			cin >> backdoor;
+		case 13: cout << "INPUT YES OR NO FOR backdoor1? ";
+			cin >> backdoor1;
 			break;
-		case 14: printf("INPUT YES OR NO FOR TROJAN? ");
+		case 14: cout << "INPUT YES OR NO FOR TROJAN? ";
 			cin >> trojan;
 			break;
-		case 15: printf("INPUT YES OR NO FOR CREDIT? ");
+		case 15: cout << "INPUT YES OR NO FOR CREDIT? ";
 			cin >> credit;
 			break;
-		case 16: printf("INPUT YES OR NO FOR CHARGES? ");
+		case 16: cout << "INPUT YES OR NO FOR CHARGES? ";
 			cin >> charges;
 			break;
-		case 17: printf("INPUT YES OR NO FOR UNUSUALLY? ");
+		case 17: cout << "INPUT YES OR NO FOR UNUSUALLY? ";
 			cin >> unusually;
 			break;
-		case 18: printf("INPUT YES OR NO FOR INABILITY? ");
-			cin >> inability;
+		case 18: cout << "INPUT YES OR NO FOR INABILITY? ";
+			cin >> inability1;
 			break;
 
 
-			/***** comment 1715 ****/
 		}
-		/* end of inputs statements for sample position knowledge
+		/* end of inputs statements for position knowledge
 		   base */
 	}
 	*index = i;
 }
-
-
-
-
