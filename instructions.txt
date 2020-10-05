@@ -42,3 +42,102 @@ Akamai's DDoS mitigation.
 PROBLEM SOLVED
 
 End of forward chaining part
+
+
+input:
+Performing backward chaining to identify the type of attack.
+** ENTER CONCLUSION ? BASIC
+INPUT YES OR NO FOR DEVICE? YES
+INPUT YES OR NO FOR NORMAL? YES
+INPUT YES OR NO FOR TROJAN? YES
+BASIC = YES
+*** SUCCESS
+
+End of backward chaining part
+
+Press any key to continue...
+
+Performing forward chaining to recommend possible preventions.
+Press any key to continue
+
+
+PROGRAM IS MALICIOUS OR BASIC
+
+YES OR NO FOR DEVICE? YES
+Use the Active Directory and make your network use a Host-based firewall
+
+YES OR NO FOR TROJAN? NO
+
+YES OR NO FOR BACKDOOR1? NO
+
+PROGRAM DDOS ATTACK
+
+YES OR NO FOR INABILITY1? YES
+Configure your firewall or router to drop incoming ICMP packets or block DNS responses.
+
+YES OR NO FOR INABILITY2? YES
+Move to a cloud-baesd DNS provider that can offer high  band width and multiple points-of-presence in data centers around the world.
+
+YES OR NO FOR INABILITY3? YES
+Akamai's DDoS mitigation.
+PROBLEM SOLVED
+
+End of forward chaining part
+
+
+input:
+Performing backward chaining to identify the type of attack.
+** ENTER CONCLUSION ? IDENTITY
+
+** THE VALUE ENTERED IS NOT A CONCLUSION
+** ENTER CONCLUSION ? IDATTACK
+INPUT YES OR NO FOR CHARGES? YES
+INPUT YES OR NO FOR CREDIT? YES
+IDATTACK = YES
+*** SUCCESS
+
+End of backward chaining part
+
+Press any key to continue...
+
+Performing forward chaining to recommend possible preventions.
+Press any key to continue
+
+
+PROGRAM IDENTITY PROBLEM
+
+YES OR NO FOR DROPPING? YES
+Change affected login account credentials. Contact your financial institution.
+PROBLEM SOLVED
+
+End of forward chaining part
+
+
+input: 
+Performing backward chaining to identify the type of attack.
+** ENTER CONCLUSION ? SLOW
+INPUT YES OR NO FOR NETWORK? YES
+INPUT YES OR NO FOR EXPLANATION? YESA
+INPUT YES OR NO FOR EXPLANATION? YES
+SLOW = YES
+*** SUCCESS
+
+End of backward chaining part
+
+Press any key to continue...
+
+Performing forward chaining to recommend possible preventions.
+Press any key to continue
+
+
+PROGRAM IS SLOW
+
+YES OR NO FOR SLOW1? YES
+Restart System.
+
+YES OR NO FOR RESTARTED1? YES
+
+YES OR NO FOR SLOW2? NO
+PROBLEM SOLVED
+
+End of forward chaining part
