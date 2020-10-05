@@ -106,11 +106,14 @@ void Prevention_FW(stringMap& varList)
 
 	for (int i = 1; i <= forward_varl_size; i++) {
 		getline(variablelistFile, variable);
-		if (variable[variable.size() - 1] == '\r')
-            variable.erase(variable.size() - 1);
+
+		if (variable.size() != 0) {
+			if (variable[variable.size() - 1] == '\r')
+				variable.erase(variable.size() - 1);
+		}
 		varlt[i] = variable;
 		//cout << "HASH: " << "VAR " << variable << " " << varList[variable] << endl;
-		
+
 		//if (varList[variable] == "NO" || varList[variable] == "YES")
 		//    varlt[i] = varList[variable];	
 		//cout << "varlt " << varlt[i] << endl;	
@@ -130,10 +133,13 @@ void Prevention_FW(stringMap& varList)
 
 	for (int i = 1; i <= forward_clvarlt_size; i++) {
 		getline(clvarltFile, clauseVar);
-		if (clauseVar[clauseVar.size() - 1] == '\r')
-            clauseVar.erase(clauseVar.size() - 1);
+		if (clauseVar.size() != 0) {
+			if (clauseVar[clauseVar.size() - 1] == '\r')
+				clauseVar.erase(clauseVar.size() - 1);
+		}
+
 		clvarlt[i] = clauseVar;
-    }
+	}
 
 	clvarltFile.close();
 
@@ -195,6 +201,7 @@ void Prevention_FW(stringMap& varList)
 			/* more statements */
 			/* locate the clause */
 			i = forward_clause_size * (sn - 1) + cn;
+
 			/* clause variable */
 			v = clvarlt[i];
 			/* are there any more clauses for this statement */
@@ -204,6 +211,10 @@ void Prevention_FW(stringMap& varList)
 				/* check instantiation of this clause */
 				check_instantiation(&i, v, varlt, instlt);
 				cn = cn + 1;
+				if (cn > forward_clause_size) {
+					cn = 1;
+					sn += 1;
+				}
 				/* check next clause */
 				i = forward_clause_size * (sn - 1) + cn;
 				v = clvarlt[i];
@@ -729,8 +740,10 @@ stringMap Attacks_BW()
 
 	for (int i = 1; i <= 24; i++) {
 		getline(conclusionListF, c);
-		if (c[c.size() - 1] == '\r')
-            c.erase(c.size() - 1);
+		if (c.size() != 0) {
+			if (c[c.size() - 1] == '\r')
+				c.erase(c.size() - 1);
+		}
 		conclt[i] = c;
 	}
 
@@ -749,6 +762,10 @@ stringMap Attacks_BW()
 
 	for (int i = 1; i <= back_varlt_size; i++) {
 		getline(variableListF, c);
+		if (c.size() != 0) {
+			if (c[c.size() - 1] == '\r')
+				c.erase(c.size() - 1);
+		}
 		varlt[i] = c;
 	}
 
@@ -768,6 +785,10 @@ stringMap Attacks_BW()
 
 	for (int i = 1; i <= 240; i++) {
 		getline(clvarltFile, clauseVar);
+		if (clauseVar.size() != 0) {
+			if (clauseVar[clauseVar.size() - 1] == '\r')
+				clauseVar.erase(clauseVar.size() - 1);
+		}
 		clvarlt[i] = clauseVar;
 	}
 
@@ -1205,62 +1226,114 @@ variable list (varlt) contains the variable (varble). */
 
 		// use these
 
-		case 1: cout << "INPUT YES OR NO FOR ACCESS? ";
-			cin >> access;
+		case 1:
+			while (access != "YES" && access != "NO") {
+				cout << "INPUT YES OR NO FOR ACCESS? ";
+				cin >> access;
+			}
 			break;
-		case 2: cout << "INPUT YES OR NO FOR DOWNLOADED? ";
-			cin >> downloaded;
+		case 2:
+			while (downloaded != "YES" && downloaded != "NO") {
+				cout << "INPUT YES OR NO FOR DOWNLOADED? ";
+				cin >> downloaded;
+			}
 			break;
-		case 3: cout << "INPUT YES OR NO FOR VIRUS? ";
-			cin >> virus;
+		case 3:
+			while (virus != "YES" && virus != "NO") {
+				cout << "INPUT YES OR NO FOR VIRUS? ";
+				cin >> virus;
+			}
 			break;
-		case 4: cout << "INPUT YES OR NO FOR BREACH? ";
-			cin >> breach;
+		case 4:
+			while (breach != "YES" && breach != "NO") {
+				cout << "INPUT YES OR NO FOR BREACH? ";
+				cin >> breach;
+			}
 			break;
-		case 5: cout << "INPUT YES OR NO FOR UNEXPLAINED? ";
-			cin >> unexplained;
+		case 5:
+			while (unexplained != "YES" && unexplained != "NO") {
+				cout << "INPUT YES OR NO FOR UNEXPLAINED? ";
+				cin >> unexplained;
+			}
 			break;
-		case 6: cout << "INPUT YES OR NO FOR SYSTEM? ";
-			cin >> sys;
+		case 6:
+			while (sys != "YES" && sys != "NO") {
+				cout << "INPUT YES OR NO FOR SYSTEM? ";
+				cin >> sys;
+			}
 			break;
-		case 7: cout << "INPUT YES OR NO FOR NETWORK? ";
-			cin >> network;
+		case 7:
+			while (network != "YES" && network != "NO") {
+				cout << "INPUT YES OR NO FOR NETWORK? ";
+				cin >> network;
+			}
 			break;
-		case 8: cout << "INPUT YES OR NO FOR EXPLANATION? ";
-			cin >> explanation;
+		case 8:
+			while (explanation != "YES" && explanation != "NO") {
+				cout << "INPUT YES OR NO FOR EXPLANATION? ";
+				cin >> explanation;
+			}
 			break;
-		case 9: cout << "INPUT YES OR NO FOR VALUABLE? ";
-			cin >> valuable;
+		case 9:
+			while (valuable != "YES" && valuable != "NO") {
+				cout << "INPUT YES OR NO FOR VALUABLE? ";
+				cin >> valuable;
+			}
 			break;
-		case 10: cout << "INPUT YES OR NO FOR LOGIN? ";
-			cin >> logIn;
+		case 10:
+			while (logIn != "YES" && logIn != "NO") {
+				cout << "INPUT YES OR NO FOR LOGIN? ";
+				cin >> logIn;
+			}
 			break;
-		case 11: cout << "INPUT YES OR NO FOR DEVICE? ";
-			cin >> device;
+		case 11:
+			while (device != "YES" && device != "NO") {
+				cout << "INPUT YES OR NO FOR DEVICE? ";
+				cin >> device;
+			}
 			break;
-		case 12: cout << "INPUT YES OR NO FOR NORMAL? ";
-			cin >> normal;
+		case 12:
+			while (normal != "YES" && normal != "NO") {
+				cout << "INPUT YES OR NO FOR NORMAL? ";
+				cin >> normal;
+			}
 			break;
-		case 13: cout << "INPUT YES OR NO FOR BACKDOOR? ";
-			cin >> backdoor1;
+		case 13:
+			while (backdoor1 != "YES" && backdoor1 != "NO") {
+				cout << "INPUT YES OR NO FOR BACKDOOR? ";
+				cin >> backdoor1;
+			}
 			break;
-		case 14: cout << "INPUT YES OR NO FOR TROJAN? ";
-			cin >> trojan;
+		case 14:
+			while (trojan != "YES" && trojan != "NO") {
+				cout << "INPUT YES OR NO FOR TROJAN? ";
+				cin >> trojan;
+			}
 			break;
-		case 15: cout << "INPUT YES OR NO FOR CREDIT? ";
-			cin >> credit;
+		case 15:
+			while (credit != "YES" && credit != "NO") {
+				cout << "INPUT YES OR NO FOR CREDIT? ";
+				cin >> credit;
+			}
 			break;
-		case 16: cout << "INPUT YES OR NO FOR CHARGES? ";
-			cin >> charges;
+		case 16:
+			while (charges != "YES" && charges != "NO") {
+				cout << "INPUT YES OR NO FOR CHARGES? ";
+				cin >> charges;
+			}
 			break;
-		case 17: cout << "INPUT YES OR NO FOR UNUSUALLY? ";
-			cin >> unusually;
+		case 17:
+			while (unusually != "YES" && unusually != "NO") {
+				cout << "INPUT YES OR NO FOR UNUSUALLY? ";
+				cin >> unusually;
+			}
 			break;
-		case 18: cout << "INPUT YES OR NO FOR INABILITY? ";
-			cin >> inability1;
+		case 18:
+			while (inability1 != "YES" && inability1 != "NO") {
+				cout << "INPUT YES OR NO FOR INABILITY? ";
+				cin >> inability1;
+			}
 			break;
-
-
 		}
 		/* end of inputs statements for position knowledge
 		   base */
