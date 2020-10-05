@@ -1,0 +1,44 @@
+Have these files in the same folder as this cpp file:
+			backward_clvarlt.txt
+			backward_conclusionlist.txt
+			backward_variablelist.txt
+			forward_clvarlt.txt
+			forward_variablelist.txt
+
+Compile using: g++ -o <exe name> Project-<name>.cpp -std=c++11
+
+input:
+** ENTER CONCLUSION ? MALICIOUS
+INPUT YES OR NO FOR SYSTEM? YES
+INPUT YES OR NO FOR VIRUS? YES
+INPUT YES OR NO FOR DOWNLOADED? YES
+INPUT YES OR NO FOR BACKDOOR? YES
+INPUT YES OR NO FOR TROJAN? NO
+
+PROGRAM IS MALICIOUS
+
+YES OR NO FOR BACKDOOR? YES
+Install the free Total AV. Use this to scan your system.
+YES OR NO FOR DEVICE? YES
+Use the Active Directory and make your network use a Host-based firewall
+
+YES OR NO FOR TROJAN? NO
+
+YES OR NO FOR BACKDOOR? NO
+
+YES OR NO FOR NORMAL? YES
+Using secpol.msc, Automatically deny elevation requests.
+
+PROGRAM DDOS ATTACK
+
+YES OR NO FOR INABILITY? YES
+Configure your firewall or router to drop incoming ICMP packets or block DNS responses.
+
+YES OR NO FOR INABILITY? YES
+Move to a cloud-baesd DNS provider that can offer high  band width and multiple points-of-presence in data centers around the world.
+
+YES OR NO FOR INABILITY? YES
+Akamai's DDoS mitigation.
+PROBLEM SOLVED
+
+End of forward chaining part

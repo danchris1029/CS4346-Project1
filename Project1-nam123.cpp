@@ -1,4 +1,4 @@
-// Updated 10/4/2020 8:07 PM. 
+// Updated 10/4/2020 3:14 AM. 
 /*
 	// NOTE:
 	Have these files in the same folder as this cpp file:
@@ -8,11 +8,13 @@
 			forward_clvarlt.txt
 			forward_variablelist.txt
 
-	Compile using: g++ -o <exe name> main_full.cpp -std=c++11
+	Compile using: g++ -o <exe name> Project-<name>.cpp -std=c++11
 
 	By: KirkWade Polasek, José Mayorga, Christian Guardiola
 
 	Description:
+		We use the backward chaining method (Attacks_BW) to figure out the value of a conclusion given preceding antecedents
+		Network-attacks and send the information to forward chaining (Prevention_FW) to prevent attacks.
 */
 
 
@@ -59,7 +61,7 @@ int main(int argc, char** argv) {
 }
 
 const int forward_clvarlt_size = 96;
-const int forward_varl_size = 14;
+const int forward_varl_size = 18;
 
 
 // removed some global variables
@@ -103,11 +105,11 @@ void Prevention_FW(stringMap& varList)
 	variablelistFile.open("forward_variablelist.txt", fstream::in);
 	string variable;
 
-	/*for (int i = 1; i <= forward_varl_size; i++) {
+	for (int i = 1; i <= forward_varl_size; i++) {
 		getline(variablelistFile, variable);
 		varlt[i] = variable.c_str();
-		cout << "HASH: " << varList[variable.c_str()] << endl;
-	}*/
+		//cout << "HASH: " << varList[variable.c_str()] << endl;
+	}
 
 	cout << "*** VARIABLE LIST ***\n";
 	for (j = 1; j <= forward_varl_size; j++)
@@ -138,7 +140,7 @@ void Prevention_FW(stringMap& varList)
 		// removed waiting at i = 4
 	}*/
 
-	/*cout << "*** CLAUSE-VARIABLE LIST ***\n";
+	cout << "*** CLAUSE-VARIABLE LIST ***\n";
 	for (i = 1; i <= 24; i++)
 	{
 		cout << "** CLAUSE " << i << endl;
@@ -148,13 +150,14 @@ void Prevention_FW(stringMap& varList)
 			cout << "VARIABLE " << j << " " << clvarlt[k] << endl;
 		}
 		// removed waiting at i = 4
-	}*/
+	}
 
 	/****** INFERENCE SECTION *****************/
 
 
 	/* place condition variable c on condition var queue cndvar */
 	cndvar[bp] = varList["CONDITION"];
+	string condition = varList["CONDITION"];
 	/* move backpointer (bp) to back */
 	bp = bp + 1;
 	/* set the condition variable pointer consisting of the
@@ -257,9 +260,9 @@ void Prevention_FW(stringMap& varList)
 				break;
 			case 22: if (condition == "MALICIOUS" && trojan == Y && backdoor1 == Y && backdoor2 == N) s = 1;
 				break;
-			case 23: if (condition == "DOS" && inability1 == Y && inability2 == Y && inability3 == Y) s = 1;
+			case 23: if (condition == "DDOS" && inability1 == Y && inability2 == Y && inability3 == Y) s = 1;
 				break;
-			case 24: if (condition == "DOS" && inability1 == Y && inability2 == Y && inability3 == N) s = 1;
+			case 24: if (condition == "DDOS" && inability1 == Y && inability2 == Y && inability3 == N) s = 1;
 				break;
 
 			}
@@ -454,6 +457,8 @@ void Prevention_FW(stringMap& varList)
 	} while (jump == true);
 	//if (v == "")
 	//	cout << "\nNO SOLUTIONS FOUND" << endl;
+	cout << "PROBLEM SOLVED" << solution << endl;
+
 	cout << "\nEnd of forward chaining part\n";
 }
 
@@ -480,90 +485,102 @@ void check_instantiation(int* index, string v, string varlt[forward_varl_size + 
 		/* the designer of this knowledge base places the input
 		statements to instantiate the variables in this case
 		statement */
-
+		cout << endl;
 		switch (i)
 		{
 			/* input statements for sample position knowledge base */
 		case 1:
-			cout << "YES OR NO FOR BACKDOOR? ";
-			cin >> backdoor1;
-			if (backdoor1 == "YES")
-				cout << "Install the free Total AV. Use this to scan your system.";
+			cout << "PROGRAM IS MALICIOUS " << endl;
 			break;
 		case 2:
+			cout << "YES OR NO FOR BACKDOOR? ";
+			cin >> backdoor2;
+			if (backdoor2 == "YES")
+				cout << "Install the free Total AV. Use this to scan your system.";
+			break;
+		case 3:
 			cout << "YES OR NO FOR DEVICE? ";
 			cin >> device;
 			if (device == "YES")
 				cout << "Use the Active Directory and make your network use a Host-based firewall" << endl;
 			break;
-		case 3:
+		case 4:
+			cout << "PROGRAM IDENTITY PROBLEM " << endl;
+			break;
+		case 5:
 			cout << "YES OR NO FOR DROPPING? ";
 			cin >> dropping;
 			if (dropping == "YES")
 				cout << "Change affected login account credentials. Contact your financial institution." << endl;
 			break;
-		case 4:
+		case 6:
+			cout << "PROGRAM IS SLOW " << endl;
+			break;
+		case 7:
 			cout << "YES OR NO FOR SLOW? ";
 			cin >> slow1;
 			if (slow1 == "YES")
 				cout << "Restart System." << endl;
 			break;
-		case 5:
-			cout << "YES OR NO FOR INABILITY? ";
-			cin >> inability1;
-			if (inability1 == "YES")
-				cout << "Configure your firewall or router to drop incoming ICMP packets or block DNS responses." << endl;
+		case 8:
+			cout << "PROGRAM DDOS ATTACK " << endl;
 			break;
-		case 6:
-			cout << "YES OR NO FOR RESTARTED? ";
-			cin >> restarted1;
-			if (restarted1 == "NO")
-				cout << "Restart Router" << endl;
-			break;
-		case 7:
+		case 9:
 			cout << "YES OR NO FOR RESTARTED? ";
 			cin >> restarted2;
 			if (restarted2 == "YES")
 				cout << "Restart Router" << endl;
 			break;
-		case 8:
-			cout << "YES OR NO FOR SLOW? ";
-			cin >> slow2;
-			if (slow2 == "YES")
-				cout << "Contact local network provider about better network solutions that they offer." << endl;
-			break;
-		case 9:
-			cout << "YES OR NO FOR CHARGES? ";
-			cin >> charges;
-			if (charges == "YES")
-				cout << "Change affected login account credentials. Contact your financial institution.s" << endl;
-			break;
 		case 10:
-			cout << "YES OR NO FOR TROJAN? ";
-			cin >> trojan;
+			cout << "YES OR NO FOR INABILITY? ";
+			cin >> inability1;
+			if (inability1 == "YES")
+				cout << "Configure your firewall or router to drop incoming ICMP packets or block DNS responses." << endl;
 			break;
 		case 11:
-			cout << "YES OR NO FOR NORMAL? ";
-			cin >> normal;
-			if (normal == "YES")
-				cout << "Using secpol.msc, Automatically deny elevation requests." << endl;
-			break;
-		case 12:
-			cout << "YES OR NO FOR BACKDOOR? ";
-			cin >> backdoor2;
-			if (backdoor2 == "YES")
-				cout << "Factory reset your system to remove all extra added software or use a restore point." << endl;
-			break;
-		case 13:
 			cout << "YES OR NO FOR INABILITY? ";
 			cin >> inability2;
 			if (inability2 == "YES")
 				cout << "Move to a cloud-baesd DNS provider that can offer high  band width and multiple points-of-presence in data centers around the world." << endl;
 			break;
+		case 12:
+			cout << "YES OR NO FOR RESTARTED? ";
+			cin >> restarted1;
+			if (restarted1 == "NO")
+				cout << "Restart Router" << endl;
+			break;
+		case 13:
+			cout << "YES OR NO FOR BACKDOOR? ";
+			cin >> backdoor1;
+			if (backdoor1 == "YES")
+				cout << "Factory reset your system to remove all extra added software or use a restore point." << endl;
+			break;
 		case 14:
+			cout << "YES OR NO FOR SLOW? ";
+			cin >> slow2;
+			if (slow2 == "YES")
+				cout << "Contact local network provider about better network solutions that they offer." << endl;
+			break;
+		case 15:
+			cout << "YES OR NO FOR CHARGES? ";
+			cin >> charges;
+			if (charges == "YES")
+				cout << "Change affected login account credentials. Contact your financial institution.s" << endl;
+			break;
+		case 16:
+			cout << "YES OR NO FOR TROJAN? ";
+			cin >> trojan;
+			break;
+		case 17:
+			cout << "YES OR NO FOR NORMAL? ";
+			cin >> normal;
+			if (normal == "YES")
+				cout << "Using secpol.msc, Automatically deny elevation requests." << endl;
+			break;
+		case 18:
 			cout << "YES OR NO FOR INABILITY? ";
 			cin >> inability3;
-			if (backdoor2 == "YES")
+			if (inability3 == "YES")
 				cout << "Akamai's DDoS mitigation." << endl;
 			break;
 		}
