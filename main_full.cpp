@@ -31,8 +31,8 @@ typedef unordered_map<string, string> stringMap;
 
 //void forward_chaining(stringMap& backVarList);
 //stringMap backward_chaining();
-void Prevention_FW();
-void Attacks_BW();
+void Prevention_FW(stringMap& varList);
+stringMap Attacks_BW();
 
 
 string var;
@@ -49,17 +49,17 @@ int main(int argc, char** argv) {
 
 	cout << "Performing backward chaining to identify the type of attack.\n";
 
-	Attacks_BW();
+    stringMap hashMap = Attacks_BW();
 
 	cout << "Performing forward chaining to recommend possible preventions.\n";
 
-	Prevention_FW();
+	Prevention_FW(hashMap);
 
 	return 0;
 }
 
 const int forward_clvarlt_size = 96;
-const int forward_varl_size = 13;
+const int forward_varl_size = 14;
 
 
 // removed some global variables
@@ -69,36 +69,11 @@ void instantiate_forward(int* index, string v, string varlt[forward_varl_size + 
 
 
 
-void Prevention_FW(string condition)
+void Prevention_FW(stringMap& varList)
 {
-
-	// Implementation: Produce the following; Knowledge base, clause variable list, variable list, conclusion variable queue and clause variable pointer.
+   // Implementation: Produce the following; Knowledge base, clause variable list, variable list, conclusion variable queue and clause variable pointer.
    // Follow through using the results from backward_chaining(), meaning a variable must be passed in order to process the rules.
    // Traverse through the rules.
-
-	queue <double> conclVarQue;
-
-	/*
-	BACKDOOR = BKD
-	TROJAN = TRJ
-	NORMAL = NRM
-	DEVICE = DV
-	CHARGES = CHG
-	DROPPING = DRP
-	SLOW = SL
-	RESTARTED = RST
-	INABILITY = INY
-	SOLUTION = SLT
-	*/
-
-	string defaultVal = "UIN"; // uninitialized
-
-	stringMap variableList;
-
-	variableList = { {"BKD", defaultVal}, {"TRJ", defaultVal}, {"NRM", defaultVal}, {"DV", defaultVal}, \
-	{"CHG", defaultVal}, {"DRP", defaultVal}, {"SL", defaultVal}, {"RST", defaultVal}, {"INY", defaultVal}, \
-	{"SLT", defaultVal} }; // Created as a hash table with uninitialized values as default
-
 
 	bool jump = false;
 
@@ -131,6 +106,7 @@ void Prevention_FW(string condition)
 	for (int i = 1; i <= forward_varl_size; i++) {
 		getline(variablelistFile, variable);
 		varlt[i] = variable.c_str();
+		cout << "HASH: " << varList[variable.c_str()] << endl;
 	}
 
 	cout << "*** VARIABLE LIST ***\n";
@@ -162,7 +138,7 @@ void Prevention_FW(string condition)
 		// removed waiting at i = 4
 	}*/
 
-	cout << "*** CLAUSE-VARIABLE LIST ***\n";
+	/*cout << "*** CLAUSE-VARIABLE LIST ***\n";
 	for (i = 1; i <= 24; i++)
 	{
 		cout << "** CLAUSE " << i << endl;
@@ -172,27 +148,13 @@ void Prevention_FW(string condition)
 			cout << "VARIABLE " << j << " " << clvarlt[k] << endl;
 		}
 		// removed waiting at i = 4
-	}
+	}*/
 
 	/****** INFERENCE SECTION *****************/
 
 
-	while (true) {
-		int leave = 0;
-		cout << "ENTER CONDITION VARIABLE? " << endl;
-		cin >> c;
-		for (int k = 1; k <= forward_varl_size; k++) {
-			if (varlt[k] == c) {
-				leave = 1;
-				break;
-			}
-		}
-		if (leave)
-			break;
-		cout << "\nNOT A CONDITION VARIABLE " << endl;
-	}
 	/* place condition variable c on condition var queue cndvar */
-	cndvar[bp] = c;
+	cndvar[bp] = varList["CONDITION"];
 	/* move backpointer (bp) to back */
 	bp = bp + 1;
 	/* set the condition variable pointer consisting of the
@@ -202,6 +164,14 @@ void Prevention_FW(string condition)
 	which is in front of the queue (cndvar), this statement number
 	is located in the clause variable list (clvarlt) */
 	/* start at the beginning */
+	
+    //for (int index = 1; index <= forward_varl_size; index++){
+    //    if (varList[varlt[i]]){
+    //    cout << "SUCESS!" << endl;
+    //    }
+    //}
+	
+	
 	f = 1;
 	do { // b496
 		jump = false;
@@ -231,7 +201,7 @@ void Prevention_FW(string condition)
 			/* sample IF-THEN statements from the position knowledge base */
 			string N = "NO";
 			string Y = "YES";
-
+            string condition = "F";
 			switch (sn)
 			{
 				/* statement 1 */
@@ -265,31 +235,31 @@ void Prevention_FW(string condition)
 				break;
 			case 11: if (condition == "SLOW" && restarted1 == Y && slow1 == Y) s = 1;
 				break;
-			case 12: if (slow1 == Y && slow2 == N) s = 1;
+			case 12: if (condition == "SLOW" && slow1 == Y && slow2 == N) s = 1;
 				break;
-			case 13: if (slow1 == Y && slow2 == Y) s = 1;
+			case 13: if (condition == "SLOW" && slow1 == Y && slow2 == Y) s = 1;
 				break;
-			case 14: if (charges == Y && dropping == Y) s = 1;
+			case 14: if (condition == "IDENTITY" && charges == Y && dropping == Y) s = 1;
 				break;
-			case 15: if (charges == N && dropping == Y) s = 1;
+			case 15: if (condition == "IDENTITY" && charges == N && dropping == Y) s = 1;
 				break;
-			case 16: if (charges == N && dropping == N) s = 1;
+			case 16: if (condition == "IDENTITY" && charges == N && dropping == N) s = 1;
 				break;
-			case 17: if (trojan == N && backdoor1 == N) s = 1;
+			case 17: if (condition == "MALICIOUS" && trojan == N && backdoor1 == N) s = 1;
 				break;
-			case 18: if (trojan == Y && normal == Y) s = 1;
+			case 18: if (condition == "MALICIOUS" && trojan == Y && normal == Y) s = 1;
 				break;
-			case 19: if (trojan == Y && normal == N && device == N) s = 1;
+			case 19: if (condition == "MALICIOUS" && trojan == Y && normal == N && device == N) s = 1;
 				break;
-			case 20: if (trojan == Y && normal == N && device == Y) s = 1;
+			case 20: if (condition == "MALICIOUS" && trojan == Y && normal == N && device == Y) s = 1;
 				break;
-			case 21: if (trojan == Y && backdoor1 == Y && backdoor2 == Y) s = 1;
+			case 21: if (condition == "MALICIOUS" && trojan == Y && backdoor1 == Y && backdoor2 == Y) s = 1;
 				break;
-			case 22: if (trojan == Y && backdoor1 == Y && backdoor2 == N) s = 1;
+			case 22: if (condition == "MALICIOUS" && trojan == Y && backdoor1 == Y && backdoor2 == N) s = 1;
 				break;
-			case 23: if (inability1 == Y && inability2 == Y && inability3 == Y) s = 1;
+			case 23: if (condition == "DOS" && inability1 == Y && inability2 == Y && inability3 == Y) s = 1;
 				break;
-			case 24: if (inability1 == Y && inability2 == Y && inability3 == N) s = 1;
+			case 24: if (condition == "DOS" && inability1 == Y && inability2 == Y && inability3 == N) s = 1;
 				break;
 
 			}
@@ -683,7 +653,7 @@ void push_on_stack(int* sp, int* sn, int statsk[], int clausk[]);
 void instantiate_backward(int* index, string varble, string varlt[], int instlt[]);
 
 
-void Attacks_BW()
+stringMap Attacks_BW()
 {
 	bool b520 = true;
 	bool b545 = true;
@@ -696,6 +666,8 @@ void Attacks_BW()
 	/*  clause vairable list */
 	string clvarlt[241];	// 4 * 15 =  60
 	string varble;
+
+	string conditionVar = "UIN";
 
 	int back_clause_size = 10;
 
@@ -763,40 +735,6 @@ void Attacks_BW()
 	fstream clvarltFile;
 	clvarltFile.open("backward_clvarlt.txt", fstream::in);
 	string clauseVar;
-
-	// GENERATE HASH
-
-		/*
-		ACCESS = ACS
-		DOWNLOADED = DNL
-		VIRUS = VR
-		BREACH = BR
-		UNEXPLAINED = UNE
-		SYSTEM = SYS
-		NETWORK = NTW
-		EXPLANATION = EXP
-		VALUABLE = VAL
-		LOG-IN = LI
-		DEVICE = DV
-		NORMAL = NRM
-		BACKDOOR = BKD
-		TROJAN = TRJ
-		CREDIT = CRD
-		CHARGES = CHG
-		UNUSUALLY = UNU
-		INABILITY = INY
-		*/
-
-	stringMap backVarList;
-
-	string defaultVal = "UIN"; // uninitialized
-
-	backVarList = { {"ACS",defaultVal}, {"DNL",defaultVal}, {"VR",defaultVal}, {"BR",defaultVal}, {"UNE",defaultVal}, {"SYS",defaultVal}, \
-				   {"NTW",defaultVal}, {"EXP",defaultVal}, {"VAL",defaultVal}, {"LI",defaultVal}, {"DV",defaultVal}, {"NRM",defaultVal}, \
-				   {"BKD",defaultVal}, {"TRJ",defaultVal}, {"CRD",defaultVal}, {"CHG",defaultVal}, {"UNU",defaultVal}, {"INY",defaultVal} };
-
-
-
 
 
 	for (int i = 1; i <= 240; i++) {
@@ -986,6 +924,7 @@ void Attacks_BW()
 				}
 				/* pop old conclusion and put on new one */
 			} while ((s != 1) && (sn != 0));  /* outer do-while loop */
+			
 			if (sn != 0) {
 				string Y = "YES";			// YES or NO char arrays
 				string N = "NO";
@@ -993,103 +932,128 @@ void Attacks_BW()
 				/* if part true invoke then part */
 				/* then part of if-then statements from the
 				   position knowledge base */
+				
 				switch (sn) {
 					/* then part of statement 1 */
 				case 1:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
+					conditionVar = "MALICIOUS";
 					break;
 				case 2:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
+					conditionVar = "MALICIOUS";
 					break;
 				case 3:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
+					conditionVar = "MALICIOUS";
 					break;
 				case 4:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
+					conditionVar = "MALICIOUS";
 					break;
 				case 5:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
+					conditionVar = "MALICIOUS";
 					break;
 				case 6:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
+					conditionVar = "MALICIOUS";
 					break;
 				case 7:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
+					conditionVar = "MALICIOUS";
 					break;
 				case 8:
 					basic = Y;
 					cout << "BASIC = YES" << endl;
+					conditionVar = "BASIC";
 					break;
 				case 9:
 					idAttack = Y;
 					cout << "IDATTACK = YES" << endl;
+					conditionVar = "IDATTACK";
 					break;
 				case 10:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
+					conditionVar = "MALICIOUS";
 					break;
 				case 11:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
+					conditionVar = "MALICIOUS";
 					break;
 				case 12:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
+					conditionVar = "MALICIOUS";
 					break;
 				case 13:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
+					conditionVar = "MALICIOUS";
 					break;
 				case 14:
 					malicious = Y;
 					cout << "MALICIOUS = YES" << endl;
+					conditionVar = "MALICIOUS";
 					break;
 				case 15:
 					idLeak = Y;
 					cout << "IDLEAK = YES" << endl;
+					conditionVar = "IDLEAK";
 					break;
 				case 16:
 					idAttack = Y;
 					cout << "IDATTACK = YES" << endl;
+					conditionVar = "IDATTACK";
 					break;
 				case 17:
 					idAttack = Y;
 					cout << "IDATTACK = YES" << endl;
+					conditionVar = "IDATTACK";
 					break;
 				case 18:
 					idLeak = Y;
 					cout << "IDLEAK = YES" << endl;
+					conditionVar = "IDLEAK";
 					break;
 				case 19:
 					idAttack = Y;
 					cout << "IDATTACK = YES" << endl;
+					conditionVar = "IDATTACK";
 					break;
 				case 20:
 					idAttack = Y;
 					cout << "IDATTACK = YES" << endl;
+					conditionVar = "IDATTACK";
 					break;
 				case 21:
 					slow1 = Y;
 					cout << "SLOW = YES" << endl;
+					conditionVar = "SLOW";
 					break;
 				case 22:
 					ddos = Y;
 					cout << "DDOS = YES" << endl;
+					conditionVar = "DDOS";
 					break;
 				case 23:
 					ddos = Y;
 					cout << "DDOS = YES" << endl;
+					conditionVar = "DDOS";
 					break;
 				case 24:
 					slow1 = Y;
 					cout << "SLOW = YES" << endl;
+					conditionVar = "SLOW";
 					break;
 				}
 				/* pop the stack */
@@ -1125,8 +1089,21 @@ void Attacks_BW()
 	cin.get();
 	cin.get();
 	cout << endl;
-	//return(backVarList);
+	
+	
+	// GENERATE HASH
 
+
+	string defaultVal = "UIN"; // uninitialized
+
+	stringMap backVarList;
+
+	backVarList = { {"BACKDOOR", backdoor1}, {"TROJAN", trojan}, {"NORMAL", normal}, {"DEVICE", device}, \
+	{"CHARGES", charges}, {"DROPPING", dropping}, {"SLOW", defaultVal}, {"RESTARTED", defaultVal}, {"INABILITY", inability1}, \
+	{"CONDITION", conditionVar} }; // Created as a hash table with uninitialized values as default
+
+	
+	return(backVarList);
 
 }
 
