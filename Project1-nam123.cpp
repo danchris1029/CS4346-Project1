@@ -100,20 +100,25 @@ void Prevention_FW(stringMap& varList)
 	// clause variables are inserted into clvarlt from the file "forward_clvarlt.txt"		
 
 
-
 	fstream variablelistFile;
 	variablelistFile.open("forward_variablelist.txt", fstream::in);
 	string variable;
 
 	for (int i = 1; i <= forward_varl_size; i++) {
 		getline(variablelistFile, variable);
-		varlt[i] = variable.c_str();
-		//cout << "HASH: " << varList[variable.c_str()] << endl;
+		if (variable[variable.size() - 1] == '\r')
+            variable.erase(variable.size() - 1);
+		varlt[i] = variable;
+		//cout << "HASH: " << "VAR " << variable << " " << varList[variable] << endl;
+		
+		//if (varList[variable] == "NO" || varList[variable] == "YES")
+		//    varlt[i] = varList[variable];	
+		//cout << "varlt " << varlt[i] << endl;	
 	}
 
-	cout << "*** VARIABLE LIST ***\n";
-	for (j = 1; j <= forward_varl_size; j++)
-		cout << "VARIABLE " << j << " " << varlt[j] << endl;
+	//cout << "*** VARIABLE LIST ***\n";
+	//for (j = 1; j <= forward_varl_size; j++)
+	//cout << "VARIABLE " << j << " " << varlt[j] << endl;
 
 	variablelistFile.close();
 	cout << "Press any key to continue\n";
@@ -125,8 +130,10 @@ void Prevention_FW(stringMap& varList)
 
 	for (int i = 1; i <= forward_clvarlt_size; i++) {
 		getline(clvarltFile, clauseVar);
-		clvarlt[i] = clauseVar.c_str();
-	}
+		if (clauseVar[clauseVar.size() - 1] == '\r')
+            clauseVar.erase(clauseVar.size() - 1);
+		clvarlt[i] = clauseVar;
+    }
 
 	clvarltFile.close();
 
@@ -140,7 +147,7 @@ void Prevention_FW(stringMap& varList)
 		// removed waiting at i = 4
 	}*/
 
-	cout << "*** CLAUSE-VARIABLE LIST ***\n";
+	/*cout << "*** CLAUSE-VARIABLE LIST ***\n";
 	for (i = 1; i <= 24; i++)
 	{
 		cout << "** CLAUSE " << i << endl;
@@ -150,7 +157,7 @@ void Prevention_FW(stringMap& varList)
 			cout << "VARIABLE " << j << " " << clvarlt[k] << endl;
 		}
 		// removed waiting at i = 4
-	}
+	}*/
 
 	/****** INFERENCE SECTION *****************/
 
@@ -173,7 +180,10 @@ void Prevention_FW(stringMap& varList)
 	//    cout << "SUCESS!" << endl;
 	//    }
 	//}
-
+	device = varList["DEVICE"];
+	charges = varList["CHARGES"];
+	trojan = varList["TROJAN"];
+	normal = varList["NORMAL"];
 
 	f = 1;
 	do { // b496
@@ -719,6 +729,8 @@ stringMap Attacks_BW()
 
 	for (int i = 1; i <= 24; i++) {
 		getline(conclusionListF, c);
+		if (c[c.size() - 1] == '\r')
+            c.erase(c.size() - 1);
 		conclt[i] = c;
 	}
 
@@ -728,9 +740,9 @@ stringMap Attacks_BW()
 	cout << "*** CONCLUSION LIST ***\n";
 	for (i = 1; i <= 24; i++) cout << "CONCLUSION " << i << " " << conclt[i] << endl;
 
-	cout << "HIT RETURN TO CONTINUE" << endl;
-	cin.get();
-	cout << "*** VARIABLE LIST *\n";
+	//cout << "HIT RETURN TO CONTINUE" << endl;
+	//cin.get();
+	//cout << "*** VARIABLE LIST *\n";
 	/**** comment 367 *****/
 	fstream variableListF;
 	variableListF.open("backward_variablelist.txt", fstream::in);
@@ -743,10 +755,10 @@ stringMap Attacks_BW()
 	variableListF.close();
 
 
-	for (i = 1; i <= back_varlt_size; i++) cout << "VARIABLE " << i << " " << varlt[i] << endl;
-	cout << "HIT RETURN KEY TO CONTINUE" << endl;
-	cin.get();
-	cout << "*** CLAUSE VARIABLE LIST ***\n";
+	//for (i = 1; i <= back_varlt_size; i++) cout << "VARIABLE " << i << " " << varlt[i] << endl;
+	//cout << "HIT RETURN KEY TO CONTINUE" << endl;
+	//cin.get();
+	//cout << "*** CLAUSE VARIABLE LIST ***\n";
 	/***** comment 407 through 409 ***/
 
 	fstream clvarltFile;
@@ -761,7 +773,7 @@ stringMap Attacks_BW()
 
 	clvarltFile.close();
 
-	for (i = 1; i <= back_conclt_size; i++) {
+	/*for (i = 1; i <= back_conclt_size; i++) {
 		cout << "** CLAUSE " << i << endl;
 		for (j = 1; j < back_clause_size + 1; j++)
 		{
@@ -769,7 +781,7 @@ stringMap Attacks_BW()
 			cout << "VARIABLE " << j << " " << clvarlt[k] << endl;
 		}
 		// removed waiting at i = 4
-	}
+	}*/
 	/****** inference section *****/
 	cout << "** ENTER CONCLUSION ? ";
 	cin >> varble;
