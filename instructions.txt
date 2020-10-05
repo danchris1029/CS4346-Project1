@@ -5,7 +5,7 @@ Have these files in the same folder as this cpp file:
 			forward_clvarlt.txt
 			forward_variablelist.txt
 
-Compile using: g++ -o <exe name> Project-1<name>.cpp -std=c++11
+Compile using: g++ -o <exe name> Project1-<name>.cpp -std=c++11
 
 input:
 ** ENTER CONCLUSION ? MALICIOUS
