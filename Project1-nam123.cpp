@@ -761,8 +761,8 @@ stringMap Attacks_BW()
 	conclusionListF.close();
 
 
-	cout << "*** CONCLUSION LIST ***\n";
-	for (i = 1; i <= 24; i++) cout << "CONCLUSION " << i << " " << conclt[i] << endl;
+	//cout << "*** CONCLUSION LIST ***\n";
+	//for (i = 1; i <= 24; i++) cout << "CONCLUSION " << i << " " << conclt[i] << endl;
 
 	//cout << "HIT RETURN TO CONTINUE" << endl;
 	//cin.get();
@@ -1017,7 +1017,7 @@ stringMap Attacks_BW()
 				case 8:
 					basic = Y;
 					cout << "BASIC = YES" << endl;
-					conditionVar = "BASIC";
+					conditionVar = "MALICIOUS";
 					break;
 				case 9:
 					idAttack = Y;
