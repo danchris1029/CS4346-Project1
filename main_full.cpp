@@ -36,6 +36,8 @@ void Attacks_BW();
 
 
 string var;
+
+
 string access, downloaded, virus, breach, unexplained, sys, network,
 explanation, logIn, device, normal, backdoor1, backdoor2, trojan, credit, charges,
 unusually, inability1, inability2, inability3, malicious, basic, idAttack, idLeak, slow1, slow2, ddos,
@@ -67,7 +69,7 @@ void instantiate_forward(int* index, string v, string varlt[forward_varl_size + 
 
 
 
-void Prevention_FW()
+void Prevention_FW(string condition)
 {
 
 	// Implementation: Produce the following; Knowledge base, clause variable list, variable list, conclusion variable queue and clause variable pointer.
@@ -173,11 +175,13 @@ void Prevention_FW()
 	}
 
 	/****** INFERENCE SECTION *****************/
+
+
 	while (true) {
 		int leave = 0;
 		cout << "ENTER CONDITION VARIABLE? " << endl;
 		cin >> c;
-		for (int k = 1; k <= 11; k++) {
+		for (int k = 1; k <= forward_varl_size; k++) {
 			if (varlt[k] == c) {
 				leave = 1;
 				break;
@@ -232,34 +236,34 @@ void Prevention_FW()
 			{
 				/* statement 1 */
 			case 1:
-				if (backdoor2 == N) s = 1;
+				if (condition == "MALICIOUS" && backdoor2 == N) s = 1;
 				break;
 				/* statement 2 */
 			case 2:
-				if (device == N) s = 1;
+				if (condition == "MALICIOUS" && device == N) s = 1;
 				break;
 				/* statement 3 */
 			case 3:
-				if (dropping == N) s = 1;
+				if (condition == "IDENTITY" && dropping == N) s = 1;
 				break;
 				/* statement 4 */
-			case 4: if (slow1 == N) s = 1;
+			case 4: if (condition == "SLOW" && slow1 == N) s = 1;
 				break;
 				/* statement 5 */
-			case 5: if (inability3 == N) s = 1;
+			case 5: if (condition == "DDOS" && inability3 == N) s = 1;
 				break;
 				/* statement 6 */
-			case 6: if (restarted2 == Y && inability1 == N) s = 1;
+			case 6: if (condition == "DDOS" && restarted2 == Y && inability1 == N) s = 1;
 				break;
-			case 7: if (restarted2 == N && inability1 == N) s = 1;
+			case 7: if (condition == "DDOS" && restarted2 == N && inability1 == N) s = 1;
 				break;
-			case 8: if (inability1 == Y && inability2 == N) s = 1;
+			case 8: if (condition == "DDOS" && inability1 == Y && inability2 == N) s = 1;
 				break;
-			case 9: if (restarted1 == N && slow1 == N) s = 1;
+			case 9: if (condition == "SLOW" && restarted1 == N && slow1 == N) s = 1;
 				break;
-			case 10: if (restarted1 == Y && slow1 == N) s = 1;
+			case 10: if (condition == "SLOW" && restarted1 == Y && slow1 == N) s = 1;
 				break;
-			case 11: if (restarted1 == Y && slow1 == Y) s = 1;
+			case 11: if (condition == "SLOW" && restarted1 == Y && slow1 == Y) s = 1;
 				break;
 			case 12: if (slow1 == Y && slow2 == N) s = 1;
 				break;
